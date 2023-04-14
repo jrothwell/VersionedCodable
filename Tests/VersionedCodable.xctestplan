@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "115D639F-F0DA-4AED-912A-6F8AC28190E0",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "VersionedCodableTests",
+        "name" : "VersionedCodableTests"
+      }
+    }
+  ],
+  "version" : 1
+}
