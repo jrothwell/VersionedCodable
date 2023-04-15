@@ -2,7 +2,7 @@
 
 A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and rationalise and reason about migrations from older versions of the type. This is especially useful for document types where things often move around.
 
-**Danger!** This is not stable yet! Please think twice before using this in your important production projects.
+⚠️ **Danger!** This is not stable yet! Please think twice before using this in your important production projects. ⚠️
 
 Specifically, `VersionedCodable` deals with a very specific use case where there is a `version` key in the encoded object, and it is a sibling of other keys in the object. For example, this:
 
@@ -77,3 +77,9 @@ encoder.encode(versioned: myPoem) // where myPoem is of type `Poem` which confor
 This is mainly intended for situations where you are encoding and decoding complex types such as documents that live in storage somewhere (on someone's device's storage, in a database, etc.) In these cases, the format often changes, and decoding logic can often become unwieldy.
 
 `VersionedCodable` was originally developed for use in [Unspool](https://unspool.app), a photo tagging app for MacOS which is not ready for the public yet.
+
+## Still Missing - Wish List
+
+[ ] Extend `Encoder` and `Decoder` to be able to deal with things other than JSON
+[ ] (?) Potentially allow different keypaths to the version field
+[ ] (?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`.)
