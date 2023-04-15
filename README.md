@@ -1,8 +1,8 @@
 # VersionedCodable
 
-A wrapper around `Codable` that allows you to version your `Codable` type, and rationalise and reason about migrations from older versions of the type. This is especially useful for document types where things often move around.
+A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and rationalise and reason about migrations from older versions of the type. This is especially useful for document types where things often move around.
 
-**Danger!** It is not stable yet! Please think twice before using this in your important production projects.
+**Danger!** This is not stable yet! Please think twice before using this in your important production projects.
 
 Specifically, `VersionedCodable` deals with a very specific use case where there is a `version` key in the encoded object, and it is a sibling of other keys in the object. For example, this:
 
