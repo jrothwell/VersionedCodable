@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// The type to set as  `PreviousVersion` for a `VersionedDecodable`
+/// type which does **not** have any older versions.
 public enum NothingEarlier {}
 
 extension NothingEarlier: VersionedCodable {
@@ -25,6 +27,13 @@ extension NothingEarlier: VersionedCodable {
     }
     
     public func encode(to encoder: Encoder) throws {
+        throw VersionedDecodingError.noOlderVersionAvailable
+    }
+}
+
+
+extension VersionedCodable where PreviousVersion == NothingEarlier {
+    public init(from: NothingEarlier) throws {
         throw VersionedDecodingError.noOlderVersionAvailable
     }
 }

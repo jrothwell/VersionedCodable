@@ -37,8 +37,6 @@ struct Poem: VersionedCodable {
         
         static let thisVersion: Int? = nil
         typealias PreviousVersion = NothingEarlier
-        init(from: NothingEarlier) throws {
-        }
     }
     
     struct PoemV1: VersionedCodable {
