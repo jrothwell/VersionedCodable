@@ -80,6 +80,6 @@ This is mainly intended for situations where you are encoding and decoding compl
 
 ## Still Missing - Wish List
 
-[ ] Extend `Encoder` and `Decoder` to be able to deal with things other than JSON
-[ ] (?) Potentially allow different keypaths to the version field
-[ ] (?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`.)
+- [ ] Extend `Encoder` and `Decoder` to be able to deal with things other than JSON
+- [ ] (?) Potentially allow different keypaths to the version field
+- [ ] (?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`.)
