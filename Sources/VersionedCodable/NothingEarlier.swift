@@ -13,27 +13,24 @@ public enum NothingEarlier {}
 
 extension NothingEarlier: VersionedCodable {
     public typealias PreviousVersion = NothingEarlier
-        
-    public static var thisVersion: Int? {
-        nil
-    }
+    public static let thisVersion: Int? = nil
     
     public init(from decoder: Decoder) throws {
-        throw VersionedDecodingError.noOlderVersionAvailable
+        throw VersionedDecodingError.noOlderVersionAvailable(than: Self.self)
     }
         
     public init(from: NothingEarlier) throws {
-        throw VersionedDecodingError.noOlderVersionAvailable
+        throw VersionedDecodingError.noOlderVersionAvailable(than: Self.self)
     }
     
     public func encode(to encoder: Encoder) throws {
-        throw VersionedDecodingError.noOlderVersionAvailable
+        throw VersionedDecodingError.noOlderVersionAvailable(than: Self.self)
     }
 }
 
 
 extension VersionedCodable where PreviousVersion == NothingEarlier {
     public init(from: NothingEarlier) throws {
-        throw VersionedDecodingError.noOlderVersionAvailable
+        throw VersionedDecodingError.noOlderVersionAvailable(than: Self.self)
     }
 }

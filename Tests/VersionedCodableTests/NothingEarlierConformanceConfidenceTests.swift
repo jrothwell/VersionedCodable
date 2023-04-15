@@ -18,14 +18,25 @@ final class NothingEarlierConformanceConfidenceTests: XCTestCase {
     
     func testDecodingThrowsError() throws {
         XCTAssertThrowsError(try JSONDecoder().decode(NothingEarlier.self, from: blankData)) { error in
-            XCTAssertEqual(VersionedDecodingError.noOlderVersionAvailable, error as? VersionedDecodingError)
+            switch error {
+            case VersionedDecodingError.noOlderVersionAvailable(let currentVersion):
+                XCTAssertTrue(currentVersion == NothingEarlier.self)
+            default:
+                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.noOlderVersionAvailable`, got: \(error)")
+            }
+
         }
         
     }
     
     func testDecodingFromSlightlyEarlierType() throws {
         XCTAssertThrowsError(try JSONDecoder().decode(versioned: VersionedCodableWithoutOlderVersion.self, from: blankData)) { error in
-            XCTAssertEqual(VersionedDecodingError.olderThanOldestVersion(desiredVersion: nil, ourMinimum: 1), error as? VersionedDecodingError)
+            switch error {
+            case VersionedDecodingError.noOlderVersionAvailable(let currentVersion):
+                XCTAssertTrue(currentVersion == VersionedCodableWithoutOlderVersion.self)
+            default:
+                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.noOlderVersionAvailable`, got: \(error)")
+            }
         }
     }
 }

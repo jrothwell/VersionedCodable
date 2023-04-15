@@ -59,11 +59,8 @@ final class VersionedCodableJSONTests: XCTestCase {
                 versioned: Poem.PoemV1.self,
                 from: oldPoem)
             XCTFail("Should not get here")
-        } catch VersionedDecodingError.olderThanOldestVersion(
-            let desiredVersion,
-            let ourMinimum) {
-            XCTAssertEqual(-1, desiredVersion)
-            XCTAssertEqual(nil, ourMinimum)
+        } catch VersionedDecodingError.noOlderVersionAvailable(than: let older) {
+            XCTAssertTrue(older == Poem.PoemPreV1.self)
         } catch {
             XCTFail("Wrong kind of error thrown: got \(error)")
         }

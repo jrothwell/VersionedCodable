@@ -2,9 +2,8 @@
 import Foundation
 
 /// A type that can convert itself into and out of an external representation, which is versioned and can be
-/// decoded from old versions of itself. Inherits from ``Codable``.
-///
-/// The version is an integer which is coded as the `version` field on the encoded type.
+/// decoded from old versions of itself. The version is an integer which is coded as the `version` field on
+/// the encoded type.
 public protocol VersionedCodable: Codable {
     
     /// The current version of this type. This is what is encoded into the `version` key on this type
@@ -29,8 +28,7 @@ struct VersionedDocument: Codable {
     var version: Int?
 }
 
-public enum VersionedDecodingError: Error, Equatable {
+public enum VersionedDecodingError: Error {
     case fieldBecameRequired
-    case olderThanOldestVersion(desiredVersion: Int?, ourMinimum: Int?)
-    case noOlderVersionAvailable
+    case noOlderVersionAvailable(than: any VersionedCodable.Type)
 }

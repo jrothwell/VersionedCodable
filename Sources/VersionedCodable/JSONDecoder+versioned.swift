@@ -26,9 +26,7 @@ extension JSONDecoder {
             // This is the right version, we can decode it
             return try decode(expectedType.self, from: data)
         } else if expectedType.PreviousVersion == NothingEarlier.self {
-            throw VersionedDecodingError.olderThanOldestVersion(
-                desiredVersion: documentVersion,
-                ourMinimum: expectedType.thisVersion)
+            throw VersionedDecodingError.noOlderVersionAvailable(than: expectedType.self)
         } else {
             return try ExpectedType(
                 from: decode(
