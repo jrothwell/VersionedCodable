@@ -1,6 +1,6 @@
 # VersionedCodable
 
-A wrapper around `Codable` that allows you to version your `Codable` type, and rationalise migrations between different versions of the type. This is especially useful for document types where things often move around.
+A wrapper around `Codable` that allows you to version your `Codable` type, and rationalise and reason about migrations from older versions of the type. This is especially useful for document types where things often move around.
 
 **Danger!** It is not stable yet! Please think twice before using this in your important production projects.
 
@@ -68,6 +68,9 @@ Encoding happens like this:
 let encoder = JSONEncoder()
 encoder.encode(versioned: myPoem) // where myPoem is of type `Poem` which conforms to `VersionedCodable`
 ```
+
+## Testing
+**It is a very good idea to write unit tests that confidence check that you can continue to decode old versions of your types.** `VersionedCodable` provides the types to make this kind of migration easy, but you still need to think carefully about how you map fields between different versions of your types.
 
 ## Applications
 
