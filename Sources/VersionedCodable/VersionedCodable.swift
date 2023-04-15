@@ -29,7 +29,7 @@ struct VersionedDocument: Codable {
     var version: Int?
 }
 
-public enum VersionedDecodingError: Error {
+public enum VersionedDecodingError: Error, Equatable {
     case fieldBecameRequired
     case olderThanOldestVersion(desiredVersion: Int?, ourMinimum: Int?)
     case noOlderVersionAvailable
