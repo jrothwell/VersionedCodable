@@ -1,4 +1,4 @@
-# VersionedCodable
+# VersionedCodable ![main workflow](https://github.com/jrothwell/VersionedCodable/actions/workflows/swift.yml/badge.svg)
 
 A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and rationalise and reason about migrations from older versions of the type. This is especially useful for document types where things often move around.
 
