@@ -28,7 +28,16 @@ struct VersionedDocument: Codable {
     var version: Int?
 }
 
+/// A problem that occurs during the decoding of a ``VersionedCodable``.
 public enum VersionedDecodingError: Error {
+    
+    /// A field that was ``Optional`` is no longer, such that this value no longer makes any sense in
+    /// the newer version of the ``VersionedCodable``.
+    ///
+    /// Used in `VersionedCodable.init(from: PreviousVersion)`.
     case fieldBecameRequired
+    
+    /// There is no previous version available to attempt decoding, so this type cannot be decoded.
+    /// - Parameter than: The current ``VersionedCodable`` type.
     case noOlderVersionAvailable(than: any VersionedCodable.Type)
 }
