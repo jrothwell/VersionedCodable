@@ -4,6 +4,10 @@ import Foundation
 /// A type that can convert itself into and out of an external representation, which is versioned and can be
 /// decoded from old versions of itself.
 ///
+/// Note that currently, **only JSON encoding/decoding is supported** using
+/// `JSONDecoder.decode(versioned:from:)` and `JSONEncoder.encode(versioned:)`.
+/// If you use the default `Codable` encoding and decoding functions, it will not encode the version.
+///
 /// ## Decoding
 /// If ``thisVersion`` matches the `version` field on the encoded type (also an optional `Int`),
 /// this type will be the one that is decoded from the rest of the document.
@@ -36,18 +40,4 @@ public protocol VersionedCodable: Codable {
 
 struct VersionedDocument: Codable {
     var version: Int?
-}
-
-/// A problem that occurs during the decoding of a ``VersionedCodable``.
-public enum VersionedDecodingError: Error {
-    
-    /// A field that was optional is no longer , such that this value no longer makes any sense in
-    /// the newer version of the ``VersionedCodable``.
-    ///
-    /// Used in `VersionedCodable.init(from: PreviousVersion)`.
-    case fieldBecameRequired
-    
-    /// There is no previous version available to attempt decoding, so this type cannot be decoded.
-    /// - Parameter than: The current ``VersionedCodable`` type.
-    case noOlderVersionAvailable(than: any VersionedCodable.Type)
 }

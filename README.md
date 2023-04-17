@@ -6,6 +6,8 @@ Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduce
 
 This is especially useful for document types where things get added, refactored, and moved around.
 
+Currently, only JSON encoding is supported.
+
 ⚠️ **Danger!** This is not stable yet! Please think twice before using this in your important production projects. ⚠️
 
 `VersionedCodable` deals with a very specific use case where there is a `version` key in the encoded object, and it is a sibling of other keys in the object. For example, this:
