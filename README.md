@@ -1,14 +1,18 @@
 # VersionedCodable ![main workflow](https://github.com/jrothwell/VersionedCodable/actions/workflows/swift.yml/badge.svg)
 
-A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and rationalise and reason about migrations from older versions of the type. This is especially useful for document types where things often move around.
+A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and facilitate migrations from older versions.
+
+Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduces the maintenance burden of making potentially breaking changes to your types.
+
+This is especially useful for document types where things get added, refactored, and moved around.
 
 ⚠️ **Danger!** This is not stable yet! Please think twice before using this in your important production projects. ⚠️
 
-Specifically, `VersionedCodable` deals with a very specific use case where there is a `version` key in the encoded object, and it is a sibling of other keys in the object. For example, this:
+`VersionedCodable` deals with a very specific use case where there is a `version` key in the encoded object, and it is a sibling of other keys in the object. For example, this:
 
 ```json
 {
-    "version": 1,
+    "version": 2,
     "author": "Anonymous",
     "poem": "An epicure dining at Crewe\nFound a rather large mouse in his stew\nCried the waiter: Don't shout\nAnd wave it about\nOr the rest will be wanting one too!"
 }
@@ -29,7 +33,14 @@ You declare conformance to `VersionedCodable` like this:
 extension Poem: VersionedCodable {
     static let thisVersion: Int? = 2
     
+    // The next oldest version of the `Poem` type.
     typealias PreviousVersion = PoemOldVersion
+    
+    
+    // Now we need to specify how to make a `Poem` from the old version of the
+    // type. For the sake of argument: `PoemOldVersion` has an array of `[String]` 
+    // rather than one big blob separated by newlines, so we need to account for
+    // this.
     init(from old: PoemOldVersion) throws {
         self.author = old.author
         self.poem = poem.joined(separator: "\n")
@@ -37,7 +48,9 @@ extension Poem: VersionedCodable {
 }
 ```
 
-You can have as many previous versions as the call stack will allow. When you've reached the oldest version and there are no previous versions of the type to try decoding, you make the compiler work and tell the decoder to stop and throw an error by doing this:
+You can have as many previous versions of the type as the call stack will allow.
+
+For the oldest version of the type with nothing older, you set `PreviousVersion` to `NothingOlder`. This is necessary to make the compiler work. Any attempts to decode a type not covered by the chain of `VersionedCodable`s will throw a `VersionedDecodingError.noOlderVersionAvailable`.
 
 ```swift
 struct PoemOldVersion {
@@ -82,4 +95,4 @@ This is mainly intended for situations where you are encoding and decoding compl
 
 - [ ] Extend `Encoder` and `Decoder` to be able to deal with things other than JSON
 - [ ] (?) Potentially allow different keypaths to the version field
-- [ ] (?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`.)
+- [ ] (?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`. It would also run the risk that backported releases to older versions would have no automatic migration path.)
