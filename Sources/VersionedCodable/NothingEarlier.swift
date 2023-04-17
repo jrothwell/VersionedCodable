@@ -7,8 +7,11 @@
 
 import Foundation
 
-/// The type to set as  `PreviousVersion` for a `VersionedDecodable`
-/// type which does **not** have any older versions.
+/// The type to set as  `PreviousVersion` for a `VersionedDecodable` type which does **not**
+/// have any older versions.
+///
+/// - Warning: Don't initialize this type. It's just here to make the compiler work. The behaviour on
+///   initialization is undefined.
 public enum NothingEarlier {}
 
 extension NothingEarlier: VersionedCodable {
