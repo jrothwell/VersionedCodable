@@ -16,9 +16,9 @@ public enum VersionedDecodingError: Error {
     /// the newer version of the ``VersionedCodable``.
     ///
     /// Used in `VersionedCodable.init(from: PreviousVersion)`.
-    case fieldBecameRequired
+    case fieldNoLongerValid
     
     /// There is no previous version available to attempt decoding, so this type cannot be decoded.
     /// - Parameter than: The current ``VersionedCodable`` type.
-    case noOlderVersionAvailable(than: any VersionedCodable.Type)
+    case unsupportedVersion(than: any VersionedCodable.Type)
 }

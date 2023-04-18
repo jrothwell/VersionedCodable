@@ -48,7 +48,7 @@ struct Poem: VersionedCodable {
         init(from old: PreviousVersion) throws {
             self.author = old.author
             guard let poem = old.poem else {
-                throw VersionedDecodingError.fieldBecameRequired
+                throw VersionedDecodingError.fieldNoLongerValid
             }
             self.poem = poem
         }
