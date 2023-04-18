@@ -59,7 +59,7 @@ final class VersionedCodableJSONTests: XCTestCase {
                 versioned: Poem.PoemV1.self,
                 from: oldPoem)
             XCTFail("Should not get here")
-        } catch VersionedDecodingError.unsupportedVersion(than: let older) {
+        } catch VersionedDecodingError.unsupportedVersion(tried: let older) {
             XCTAssertTrue(older == Poem.PoemPreV1.self)
         } catch {
             XCTFail("Wrong kind of error thrown: got \(error)")

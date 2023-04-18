@@ -19,6 +19,6 @@ public enum VersionedDecodingError: Error {
     case fieldNoLongerValid
     
     /// There is no previous version available to attempt decoding, so this type cannot be decoded.
-    /// - Parameter than: The current ``VersionedCodable`` type.
-    case unsupportedVersion(than: any VersionedCodable.Type)
+    /// - Parameter tried: The last ``VersionedCodable`` attempted.
+    case unsupportedVersion(tried: any VersionedCodable.Type)
 }

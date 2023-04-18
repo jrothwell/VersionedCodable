@@ -31,7 +31,7 @@ extension PropertyListDecoder {
             // This is the right version, we can decode it
             return try decode(expectedType.self, from: data)
         } else if expectedType.PreviousVersion == NothingEarlier.self {
-            throw VersionedDecodingError.unsupportedVersion(than: expectedType.self)
+            throw VersionedDecodingError.unsupportedVersion(tried: expectedType.self)
         } else {
             return try ExpectedType(
                 from: decode(

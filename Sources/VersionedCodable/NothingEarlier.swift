@@ -19,21 +19,21 @@ extension NothingEarlier: VersionedCodable {
     public static let thisVersion: Int? = nil
     
     public init(from decoder: Decoder) throws {
-        throw VersionedDecodingError.unsupportedVersion(than: Self.self)
+        throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
     }
         
     public init(from: NothingEarlier) throws {
-        throw VersionedDecodingError.unsupportedVersion(than: Self.self)
+        throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
     }
     
     public func encode(to encoder: Encoder) throws {
-        throw VersionedDecodingError.unsupportedVersion(than: Self.self)
+        throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
     }
 }
 
 
 extension VersionedCodable where PreviousVersion == NothingEarlier {
     public init(from: NothingEarlier) throws {
-        throw VersionedDecodingError.unsupportedVersion(than: Self.self)
+        throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
     }
 }
