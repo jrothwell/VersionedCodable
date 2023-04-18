@@ -6,10 +6,11 @@ Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduce
 
 This is especially useful for document types where things get added, refactored, and moved around.
 
-Currently, only JSON encoding is supported.
-
 ⚠️ **Danger!** This is not stable yet! Please think twice before using this in your important production projects. ⚠️
 
+Currently, only encoding and decoding using the built-in JSON and property list encoders/decoders are supported. You use an extension with the signature 
+
+## Problem statement
 `VersionedCodable` deals with a very specific use case where there is a `version` key in the encoded object, and it is a sibling of other keys in the object. For example, this:
 
 ```json
@@ -29,10 +30,17 @@ struct Poem {
 }
 ```
 
+
+## How to use it
+
 You declare conformance to `VersionedCodable` like this:
 
 ```swift
 extension Poem: VersionedCodable {
+    // Specify the current version.
+    // This will be the contents of the `version` field when you encode this
+    // type. It also tells us on decoding that this type is capable of
+    // decoding itself from an input with `"version": 2`.
     static let thisVersion: Int? = 2
     
     // The next oldest version of the `Poem` type.
@@ -69,7 +77,7 @@ extension PoemOldVersion: VersionedCodable {
 ```
 
 ## Encoding and decoding
-`VersionedCodable` provides thin wrappers around Swift's default `JSONEncoder.encode(_:)` and `JSONDecoder.decode(_:from:)` functions.
+`VersionedCodable` provides thin wrappers around Swift's default `encode(_:)` and `decode(_:from:)` functions for both the JSON and property list decoders.
 
 You decode a versioned type like this:
 
@@ -95,6 +103,7 @@ This is mainly intended for situations where you are encoding and decoding compl
 
 ## Still Missing - Wish List
 
-- [ ] Extend `Encoder` and `Decoder` to be able to deal with things other than JSON
+- [X] Add support for property lists
+- [ ] Extend `Encoder` and `Decoder` to be able to deal with things other than JSON and property lists---may be difficult since not all encoders behave in the same way. May also require some kind of wrapper type since you can't override *and* delegate to the default implementation at the same time.
 - [ ] (?) Potentially allow different keypaths to the version field
 - [ ] (?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`. It would also run the risk that backported releases to older versions would have no automatic migration path.)

@@ -4,9 +4,11 @@ import Foundation
 /// A type that can convert itself into and out of an external representation, which is versioned and can be
 /// decoded from old versions of itself.
 ///
-/// Note that currently, **only JSON encoding/decoding is supported** using
-/// `JSONDecoder.decode(versioned:from:)` and `JSONEncoder.encode(versioned:)`.
-/// If you use the default `Codable` encoding and decoding functions, it will not encode the version.
+/// Note that currently, **only JSON and property list encoding/decoding is supported** using
+/// `decode(versioned:from:)` and `encode(versioned:)` in the default `JSONEncoder`
+/// and `PropertyListDecoder` types. If you use the default `Encodable` encoding functions
+/// it will not encode the version. Similarly, the default `Decodable` decoding functions will not account
+/// for or care about potential older versions.
 ///
 /// ## Decoding
 /// If ``thisVersion`` matches the `version` field on the encoded type (also an optional `Int`),

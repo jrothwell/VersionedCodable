@@ -9,7 +9,7 @@ import Foundation
 
 /// A problem that occurs during the decoding of a ``VersionedCodable``.
 /// - Note: The decoding of a ``VersionedCodable`` can also result in the same kinds of errors
-///   that are thrown during the decoding of any other ``Codable``.
+///   that are thrown during the decoding of any other `Codable`.
 public enum VersionedDecodingError: Error {
     
     /// A field that was optional is no longer , such that this value no longer makes any sense in
