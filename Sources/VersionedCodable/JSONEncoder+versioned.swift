@@ -20,12 +20,3 @@ extension JSONEncoder {
         try encode(VersionedCodableWritingWrapper(wrapped: value))
     }
 }
-
-private struct VersionedCodableWritingWrapper: Encodable {
-    var wrapped: any VersionedCodable
-    
-    public func encode(to encoder: Encoder) throws {
-        try wrapped.encode(to: encoder)
-        try VersionedDocument(version: type(of: wrapped).thisVersion).encode(to: encoder)
-    }
-}

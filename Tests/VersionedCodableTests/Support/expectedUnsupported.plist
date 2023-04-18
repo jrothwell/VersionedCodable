@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>author</key>
+	<string>William Topaz McGonagall</string>
+	<key>poem</key>
+	<string>Beautiful city of Glasgow, with your streets so neat and clean,
+Your stateley mansions, and beautiful Green!
+Likewise your beautiful bridges across the River Clyde,
+And on your bonnie banks I would like to reside.</string>
+	<key>version</key>
+	<integer>-2</integer>
+</dict>
+</plist>

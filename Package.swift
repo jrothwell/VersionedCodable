@@ -21,6 +21,11 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "VersionedCodableTests",
-            dependencies: ["VersionedCodable"]),
+            dependencies: ["VersionedCodable"],
+            resources: [
+                .copy("Support/expectedEncoded.plist"),
+                .copy("Support/expectedOlder.plist"),
+                .copy("Support/expectedUnsupported.plist"),
+            ]),
     ]
 )

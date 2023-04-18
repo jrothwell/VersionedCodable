@@ -1,5 +1,5 @@
 //
-//  PoemExample.swift
+//  PoemDocuments.swift
 //  
 //
 //  Created by Jonathan Rothwell on 15/04/2023.
@@ -81,5 +81,12 @@ struct Poem: VersionedCodable {
             self.authorName = old.authorName
             self.lines = old.poem.components(separatedBy: "\n")
         }
+    }
+}
+
+extension Poem {
+    internal init(author: Poem.Author? = nil, lines: [String]) {
+        self.author = author
+        self.lines = lines
     }
 }
