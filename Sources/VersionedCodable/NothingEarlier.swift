@@ -14,6 +14,17 @@ import Foundation
 ///   behaviour on initialization, decoding, and encoding is undefined.
 public enum NothingEarlier {}
 
+extension VersionedCodable where PreviousVersion == NothingEarlier {
+    // For the oldest type, this avoids people having to declare a useless
+    // initializer from `NothingEarlier`.
+    
+    /// - Warning: Do not invoke this initializer. The behaviour on initialization is undefined: in future it
+    ///   may result in an unrecoverable fatal error or assertion failure.
+    public init(from: NothingEarlier) throws {
+        throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
+    }
+}
+
 extension NothingEarlier: VersionedCodable {
     public typealias PreviousVersion = NothingEarlier
     public static let thisVersion: Int? = nil
@@ -24,13 +35,7 @@ extension NothingEarlier: VersionedCodable {
     public init(from decoder: Decoder) throws {
         throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
     }
-    
-    /// - Warning: Do not invoke this initializer. The behaviour on initialization is undefined: in future it
-    ///   may result in an unrecoverable fatal error or assertion failure.
-    public init(from: NothingEarlier) throws {
-        throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
-    }
-    
+        
     /// - Warning: Do not try to encode this type. The behaviour on encoding is undefined: in future it
     ///   may result in an unrecoverable fatal error or assertion failure.
     public func encode(to encoder: Encoder) throws {
@@ -38,11 +43,3 @@ extension NothingEarlier: VersionedCodable {
     }
 }
 
-
-extension VersionedCodable where PreviousVersion == NothingEarlier {
-    /// - Warning: Do not invoke this initializer. The behaviour on initialization is undefined: in future it
-    ///   may result in an unrecoverable fatal error or assertion failure.
-    public init(from: NothingEarlier) throws {
-        throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
-    }
-}
