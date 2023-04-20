@@ -6,9 +6,9 @@ Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduce
 
 This is especially useful for document types where things get added, refactored, and moved around.
 
-⚠️ **Danger!** This is not stable yet! Please think twice before using this in your important production projects. ⚠️
+⚠️ **Danger:** ``VersionedCodable`` is still under active development and the API has not stabilised yet. It should be safe to use, but please be careful if you include it in your production projects.
 
-Currently, only encoding and decoding using the built-in JSON and property list encoders/decoders are supported. You use an extension with the signature 
+Currently, only encoding and decoding using the built-in JSON and property list encoders/decoders are supported. You use an extension with the signature `decode(versioned:from:)` to decode, and `encode(versioned:)` to encode.
 
 ## Problem statement
 `VersionedCodable` deals with a very specific use case where there is a `version` key in the encoded object, and it is a sibling of other keys in the object. For example, this:

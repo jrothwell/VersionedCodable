@@ -26,8 +26,5 @@ This means that when you decode a JSON document or a property list with `decode(
 
 For the earliest version, you define its previous version as the special type ``NothingEarlier``. If we get to this stage during decoding, a special error ``VersionedDecodingError/unsupportedVersion(tried:)`` is thrown.
 
-When encoding, the version is always persisted to the 
+When encoding, the version is always encoded as `version` at the top level. It is encoded **after** the other keys in the `Encodable`.
 
-## Topics
-
-- 
