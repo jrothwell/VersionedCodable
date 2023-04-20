@@ -27,7 +27,7 @@ extension VersionedCodable where PreviousVersion == NothingEarlier {
 
 extension NothingEarlier: VersionedCodable {
     public typealias PreviousVersion = NothingEarlier
-    public static let thisVersion: Int? = nil
+    public static let version: Int? = nil
     
     
     /// - Warning: Do not invoke this initializer. The behaviour on initialization is undefined: in future it

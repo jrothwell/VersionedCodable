@@ -41,7 +41,7 @@ extension Poem: VersionedCodable {
     // This will be the contents of the `version` field when you encode this
     // type. It also tells us on decoding that this type is capable of
     // decoding itself from an input with `"version": 2`.
-    static let thisVersion: Int? = 2
+    static let version: Int? = 2
     
     // The next oldest version of the `Poem` type.
     typealias PreviousVersion = PoemOldVersion
@@ -69,7 +69,7 @@ struct PoemOldVersion {
 }
 
 extension PoemOldVersion: VersionedCodable {
-    static let thisVersion: Int? = 1
+    static let version: Int? = 1
     
     typealias PreviousVersion = NothingOlder
     // You don't need to provide an initializer here since you've defined `PreviousVersion` as `NothingOlder.`

@@ -14,7 +14,7 @@ This handles a specific case where you want to save a document version number as
 
 - Important: ``VersionedCodable`` is still under active development and the API has not stabilised yet. It should be safe to use, but please be careful if you include it in your production projects.
 
-## Overview
+- Note: Currently, the only supported ways of coding a ``VersionedCodable`` are using Foundation's built-in `JSONDecoder`/`JSONEncoder` and `PropertyListDecoder`/`PropertyListEncoder`. This may change in future but this is the situation for now.
 
 You make your type versioned by making it conform to ``VersionedCodable``. This inherits from `Codable` and adds new requirements where you specify:
 

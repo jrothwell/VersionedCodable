@@ -11,14 +11,14 @@ import Foundation
 /// for or care about potential older versions.
 ///
 /// ## Decoding
-/// If ``thisVersion`` matches the `version` field on the encoded type (also an optional `Int`),
+/// If ``version`` matches the `version` field on the encoded type (also an optional `Int`),
 /// this type will be the one that is decoded from the rest of the document.
 ///
 /// ## Encoding
 /// Upon encoding, the type will be encoded as normal and then an additional `version` field will be
-/// encoded with the contents of ``thisVersion``.
+/// encoded with the contents of ``version``.
 ///
-/// - Note: ``thisVersion`` is optional, to account for versions of the type that were created and encoded
+/// - Note: ``version`` is optional, to account for versions of the type that were created and encoded
 ///   before you adopted ``VersionedCodable`` (hence making any encoded `version` value `nil`.)
 public protocol VersionedCodable: Codable {
     
@@ -27,7 +27,7 @@ public protocol VersionedCodable: Codable {
     ///
     /// - Note: It's possible for this to be `nil`, to account for versions of the type that were created and
     /// encoded/persisted to disk before you adopted ``VersionedCodable``.
-    static var thisVersion: Int? { get }
+    static var version: Int? { get }
     
     /// The next oldest version of this type, or ``NothingEarlier`` if this *is* the oldest version.
     /// - Note: If this **is** the oldest version of the type, then use  ``NothingEarlier``. This
@@ -49,6 +49,6 @@ struct VersionedCodableWritingWrapper: Encodable {
     
     public func encode(to encoder: Encoder) throws {
         try wrapped.encode(to: encoder)
-        try VersionedDocument(version: type(of: wrapped).thisVersion).encode(to: encoder)
+        try VersionedDocument(version: type(of: wrapped).version).encode(to: encoder)
     }
 }

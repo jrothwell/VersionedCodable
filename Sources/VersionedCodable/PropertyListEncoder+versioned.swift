@@ -13,10 +13,10 @@ extension PropertyListEncoder {
     ///
     /// This behaves identically to ``PropertyListEncoder/encode(_:)`` except it adds (and
     /// potentially overwrites) a `version` attribute at the root with the version in your type's
-    /// ``VersionedCodable/thisVersion``.
+    /// ``VersionedCodable/version``.
     /// - Parameter value: The value to encode as a property list.
     ///   Must conform to ``VersionedCodable`` and thus supply a
-    ///   ``VersionedCodable/thisVersion`` value.
+    ///   ``VersionedCodable/version`` value.
     /// - Returns: The encoded property list, complete with a `version` field.
     public func encode(versioned value: any VersionedCodable) throws -> Foundation.Data {
         try encode(VersionedCodableWritingWrapper(wrapped: value))

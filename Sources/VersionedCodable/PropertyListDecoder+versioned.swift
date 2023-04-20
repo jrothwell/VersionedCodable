@@ -14,7 +14,7 @@ extension PropertyListDecoder {
     ///
     /// This behaves in the same way as ``decode(_:from:)`` but also throws the
     /// ``VersionedDecodingError/olderThanOldestVersion(desiredVersion:ourMinimum:)``
-    /// error if there are no versions of the type where their `thisVersion` matches what's in (or not in) `data`.
+    /// error if there are no versions of the type where their `version` matches what's in (or not in) `data`.
     ///
     /// - Parameters:
     ///   - expectedType: The type of the value to decode from the supplied property list—
@@ -27,7 +27,7 @@ extension PropertyListDecoder {
         let documentVersion = try self.decode(VersionedDocument.self,
                                       from: data).version
         
-        if documentVersion == expectedType.thisVersion {
+        if documentVersion == expectedType.version {
             // This is the right version, we can decode it
             return try decode(expectedType.self, from: data)
         } else if expectedType.PreviousVersion == NothingEarlier.self {

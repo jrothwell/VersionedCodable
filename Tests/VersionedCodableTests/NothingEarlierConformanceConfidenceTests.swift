@@ -13,7 +13,7 @@ final class NothingEarlierConformanceConfidenceTests: XCTestCase {
     let blankData = "{}".data(using: .utf8)!
     
     func testNothingEarlierVersionIsNil() throws {
-        XCTAssertNil(NothingEarlier.thisVersion)
+        XCTAssertNil(NothingEarlier.version)
     }
     
     func testDecodingThrowsError() throws {
@@ -42,7 +42,7 @@ final class NothingEarlierConformanceConfidenceTests: XCTestCase {
 }
 
 struct VersionedCodableWithoutOlderVersion: VersionedCodable {
-    static let thisVersion: Int? = 1
+    static let version: Int? = 1
     
     typealias PreviousVersion = NothingEarlier
     
