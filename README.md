@@ -1,10 +1,8 @@
 # VersionedCodable ![main workflow](https://github.com/jrothwell/VersionedCodable/actions/workflows/swift.yml/badge.svg)
 
-A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and facilitate incremental migrations from older versions.
+A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and facilitates incremental migrations from older versions.
 
-Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduces the maintenance burden of making potentially breaking changes to your types.
-
-This is especially useful for document types where things get added, refactored, and moved around.
+Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduces the maintenance burden of making potentially breaking changes to your types. This is especially useful for document types where things get added, refactored, and moved around.
 
 ⚠️ **Danger:** ``VersionedCodable`` is still under active development and the API has not stabilised yet. It should be safe to use, but please be careful if you include it in your production projects.
 
@@ -93,7 +91,7 @@ encoder.encode(versioned: myPoem) // where myPoem is of type `Poem` which confor
 ```
 
 ## Testing
-**It is a very good idea to write unit tests that confidence check that you can continue to decode old versions of your types.** `VersionedCodable` provides the types to make this kind of migration easy, but you still need to think carefully about how you map fields between different versions of your types.
+**It is a very good idea to write unit tests for decoding old versions of your types to act as a suite of confidence tests.** `VersionedCodable` provides the types to make this kind of migration easy, but you still need to think carefully about how you map fields between different versions of your types.
 
 ## Applications
 
