@@ -1,0 +1,46 @@
+name: Build documentation catalogue & deploy to GitHub Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  release:
+	  types:
+		  - published
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+	environment:
+	  name: github-pages
+	  url: ${{ steps.deployment.outputs.page_url }}
+	runs-on: ubuntu-latest
+	steps:
+	  - name: Checkout
+		uses: actions/checkout@v3
+	  - name: Setup Pages
+		uses: actions/configure-pages@v3
+	  - name: Build with Swift-DocC
+	    run: |
+			swift package --allow-writing-to-directory _site generate-documentation --target VersionedCodable --disable-indexing --transform-for-static-hosting --hosting-base-path / --output-path _site
+	  - name: Upload artifact
+		uses: actions/upload-pages-artifact@v1
+		with:
+		  # Upload entire repository
+		  path: '_site'
+	  - name: Deploy to GitHub Pages
+		id: deployment
+		uses: actions/deploy-pages@v2
