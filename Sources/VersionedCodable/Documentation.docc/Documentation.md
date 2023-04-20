@@ -2,7 +2,7 @@
 
 A wrapper around Swift's `Codable` that allows you to version your `Codable` type, and facilitate incremental migrations from older versions.
 
-This handles a specific case where you want to save a document version number as a sibling to the other fields in your encoded type, e.g.
+This handles a specific case where you want to be able to change the structure of a type, while retaining the ability to decode older versions of it. It encodes a version number for the type as a sibling to the other fields, e.g.
 
 ```json
 {
