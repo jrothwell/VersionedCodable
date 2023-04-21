@@ -1,12 +1,8 @@
 name: Build documentation catalogue & deploy to GitHub Pages
 
 on:
-  # Runs on pushes targeting the default branch
   release:
-	  types: [published]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+	types: [published]
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
