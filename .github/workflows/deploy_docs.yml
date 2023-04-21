@@ -30,7 +30,7 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Build with Swift-DocC
         run: |
-            swift package --allow-writing-to-directory _site generate-documentation --target VersionedCodable --disable-indexing --transform-for-static-hosting --hosting-base-path / --output-path _site
+            swift package --allow-writing-to-directory _site generate-documentation --target VersionedCodable --disable-indexing --transform-for-static-hosting --hosting-base-path /VersionedCodable --output-path _site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
