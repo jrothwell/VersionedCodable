@@ -12,9 +12,11 @@ This handles a specific case where you want to be able to change the structure o
 }
 ```
 
+The version number is completely transparent at the point of use. You don't need to worry about it and shouldn't try to set it manually.
+
 - Important: ``VersionedCodable`` is still under active development and the API has not stabilised yet. It should be safe to use, but please be careful if you include it in your production projects.
 
-- Note: Currently, the only supported ways of coding a ``VersionedCodable`` are using Foundation's built-in `JSONDecoder`/`JSONEncoder` and `PropertyListDecoder`/`PropertyListEncoder`. This may change in future but this is the situation for now.
+- Note: Currently, the only supported ways of coding a ``VersionedCodable`` are using Foundation's built-in `JSONDecoder`/`JSONEncoder` and `PropertyListDecoder`/`PropertyListEncoder`. You can implement your own encoders/decoders if you need to.
 
 You make your type versioned by making it conform to ``VersionedCodable``. This inherits from `Codable` and adds new requirements where you specify:
 

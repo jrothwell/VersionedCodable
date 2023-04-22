@@ -48,6 +48,12 @@ struct VersionedCodableWritingWrapper: Encodable {
     var wrapped: any VersionedCodable
     
     public func encode(to encoder: Encoder) throws {
+        if let _ = Mirror(reflecting: wrapped)
+            .children
+            .first(where: { $0.label == "version" }) {
+            throw VersionedEncodingError.typeHasClashingVersionField
+        }
+        
         try wrapped.encode(to: encoder)
         try VersionedDocument(version: type(of: wrapped).version).encode(to: encoder)
     }

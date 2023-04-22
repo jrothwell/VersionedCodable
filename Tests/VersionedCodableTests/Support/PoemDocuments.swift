@@ -84,6 +84,14 @@ struct Poem: VersionedCodable {
     }
 }
 
+struct PoemWithClash: VersionedCodable {
+    static let version: Int? = 1
+    typealias PreviousVersion = NothingEarlier
+    
+    var content: String
+    var version: Int
+}
+
 extension Poem {
     internal init(author: Poem.Author? = nil, lines: [String]) {
         self.author = author

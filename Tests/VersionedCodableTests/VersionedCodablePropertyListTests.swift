@@ -57,5 +57,22 @@ final class VersionedCodablePropertyListTests: XCTestCase {
                 }
             }
     }
+    
+    func testExplodesWhenEncodingTypeWithClashingVersionField() throws {
+        let clashingPoem = PoemWithClash(
+            content: "Though the great Waters sleep",
+            version: 2)
+        
+        XCTAssertThrowsError(try PropertyListEncoder().encode(versioned: clashingPoem)) { error in
+            switch error {
+            case VersionedEncodingError.typeHasClashingVersionField:
+                // ok
+                break
+            default:
+                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedEncodingError.typeHasClashingVersionField`, got: \(error)")
+            }
+        }
+    }
+
 
 }
