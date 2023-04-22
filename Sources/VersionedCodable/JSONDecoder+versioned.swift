@@ -7,9 +7,9 @@ extension JSONDecoder {
     /// versioned. It will try and find a version of the type that matches the version (if any) encoded
     /// in the JSON object.
     ///
-    /// This behaves in the same way as ``decode(_:from:)`` but also throws the
-    /// ``VersionedDecodingError/olderThanOldestVersion(desiredVersion:ourMinimum:)``
-    /// error if there are no versions of the type where their `version` matches what's in (or not in) `data`.
+    /// This behaves in the same way as `decode(_:from:)` but also throws the
+    /// ``VersionedDecodingError/unsupportedVersion(tried:)`` error if there are no
+    /// versions of the type where their `version` matches what's in (or not in) `data`.
     ///
     /// - Parameters:
     ///   - expectedType: The type of the value to decode from the supplied JSON object—
