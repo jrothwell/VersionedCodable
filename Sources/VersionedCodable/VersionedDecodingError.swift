@@ -12,8 +12,8 @@ import Foundation
 ///   that are thrown during the decoding of any other `Codable`.
 public enum VersionedDecodingError: Error {
     
-    /// A field that was optional is no longer , such that this value no longer makes any sense in
-    /// the newer version of the ``VersionedCodable``.
+    /// A field that was valid is no longer valid , such that this value no longer makes any sense in
+    /// the newer version of the type.
     ///
     /// Used in `VersionedCodable.init(from: PreviousVersion)`.
     case fieldNoLongerValid

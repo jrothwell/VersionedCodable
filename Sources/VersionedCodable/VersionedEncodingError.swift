@@ -15,7 +15,7 @@ public enum VersionedEncodingError: Error {
     /// Occurs when the type we are trying to encode has a property called `version`.
     ///
     /// This is an error because this it can and will be overridden by the current value of
-    /// ``VersionedCodable/thisVersion``.  You should not try to set the contents of the
+    /// ``VersionedCodable/version``.  You should not try to set the contents of the
     /// `version` field in your document yourself.
     /// - Tip: If you absolutely **must** encode an old version of your type (e.g. for compatibility reasons),
     ///   encode that type directly. Don't try to manually set the contents of the `version` field.
