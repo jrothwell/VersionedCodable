@@ -8,7 +8,7 @@
 import Foundation
 
 extension PropertyListDecoder {
-    /// Returns a value of the type you specify, decoded from a property list, **where** the type is
+    /// Returns a value of the type you specify, decoded from a property list, where the type is
     /// versioned. It will try and find a version of the type that matches the version (if any) encoded
     /// in the property list.
     ///
@@ -24,20 +24,8 @@ extension PropertyListDecoder {
     public func decode<ExpectedType: VersionedCodable>(
         versioned expectedType: ExpectedType.Type,
         from data: Data) throws -> ExpectedType {
-        let documentVersion = try self.decode(VersionedDocument.self,
-                                      from: data).version
-        
-        if documentVersion == expectedType.version {
-            // This is the right version, we can decode it
-            return try decode(expectedType.self, from: data)
-        } else if expectedType.PreviousVersion == NothingEarlier.self {
-            throw VersionedDecodingError.unsupportedVersion(tried: expectedType.self)
-        } else {
-            return try ExpectedType(
-                from: decode(
-                    versioned: expectedType.PreviousVersion,
-                    from: data))
-        }
+            try ExpectedType.decode(from: data,
+                                    using: { try self.decode($0, from: $1) })
     }
 
 }

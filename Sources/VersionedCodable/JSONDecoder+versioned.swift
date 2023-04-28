@@ -19,19 +19,7 @@ extension JSONDecoder {
     public func decode<ExpectedType: VersionedCodable>(
         versioned expectedType: ExpectedType.Type,
         from data: Data) throws -> ExpectedType {
-        let documentVersion = try self.decode(VersionedDocument.self,
-                                      from: data).version
-        
-        if documentVersion == expectedType.version {
-            // This is the right version, we can decode it
-            return try decode(expectedType.self, from: data)
-        } else if expectedType.PreviousVersion == NothingEarlier.self {
-            throw VersionedDecodingError.unsupportedVersion(tried: expectedType.self)
-        } else {
-            return try ExpectedType(
-                from: decode(
-                    versioned: expectedType.PreviousVersion,
-                    from: data))
-        }
+            try ExpectedType.decode(from: data,
+                                    using: { try self.decode($0, from: $1) })
     }
 }
