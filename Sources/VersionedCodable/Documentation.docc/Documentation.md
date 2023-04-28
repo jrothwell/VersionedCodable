@@ -14,19 +14,41 @@ This handles a specific case where you want to be able to change the structure o
 
 The version number is completely transparent at the point of use. You don't need to worry about it and shouldn't try to set it manually.
 
-- Important: ``VersionedCodable`` is still under active development and the API has not stabilised yet. It should be safe to use, but please be careful if you include it in your production projects.
-
-- Note: Currently, the only supported ways of coding a ``VersionedCodable`` are using Foundation's built-in `JSONDecoder`/`JSONEncoder` and `PropertyListDecoder`/`PropertyListEncoder`. You can implement your own encoders/decoders if you need to.
-
+## Making your types versioned
 You make your type versioned by making it conform to ``VersionedCodable``. This inherits from `Codable` and adds new requirements where you specify:
 
-- The current version number of the type
-- What the type of the *previous* version is
-- An initializer for the current type which accepts the previous version
+- The current version number of the type (``VersionedCodable/version``.) Note that this may be `nil`.
+- What the type of the *previous* version is (``VersionedCodable/PreviousVersion``.) If you're using the oldest version, you set this to ``NothingEarlier``.
+- An initializer for the current type which accepts the previous version of the type.
 
-This means that when you decode a JSON document or a property list with `decode(versioned:from:)` it will keep moving back along the chain of versions until it finds one that matches the document. It decodes to the current type, effectively performing an in-memory incremental migration.
 
-For the earliest version, you define its previous version as the special type ``NothingEarlier``. If we get to this stage during decoding, a special error ``VersionedDecodingError/unsupportedVersion(tried:)`` is thrown.
+## Decoding a versioned type
+``VersionedCodable`` provides extensions to Foundation's built-in `JSONDecoder`/`JSONEncoder` and `PropertyListDecoder`/`PropertyListEncoder` types to allow you decode these out of the box, like this:
+
+```swift
+let poem = try JSONDecoder().decode(versioned: Poem.self, from: oldPoem)
+```
+
+For other kinds of encoders and decoders you need to do a little more work, but not much. Define an extension on your decoder type to use ``VersionedCodable``'s logic to determine which type to decode:
+
+```swift
+extension HyperCardDecoder {
+    public func decode<ExpectedType: VersionedCodable>(
+        versioned expectedType: ExpectedType.Type,
+        from data: Data) throws -> ExpectedType {
+            try ExpectedType.decode(from: data,
+                                    using: { try self.decode($0, from: $1) }) // delegate to your normal decoding logic
+    }
+}
+```
+
+## Encoding a versioned type
 
 When encoding, the version is always encoded as `version` at the top level. It is encoded **after** the other keys in the `Encodable`.
+
+```swift
+let data = try JSONEncoder().encode(versioned: poem)
+```
+
+
 
