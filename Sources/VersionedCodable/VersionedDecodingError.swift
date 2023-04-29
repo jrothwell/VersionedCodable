@@ -16,7 +16,10 @@ public enum VersionedDecodingError: Error {
     /// the newer version of the type.
     ///
     /// Used in `VersionedCodable.init(from: PreviousVersion)`.
-    case fieldNoLongerValid
+    ///
+    /// - Parameter context: A decoding context to indicate the coding path to the offending field
+    ///   and (optionally) the error that stopped decoding.
+    case fieldNoLongerValid(DecodingError.Context)
     
     /// There is no previous version available to attempt decoding, so this type cannot be decoded.
     /// - Parameter tried: The last ``VersionedCodable`` attempted.

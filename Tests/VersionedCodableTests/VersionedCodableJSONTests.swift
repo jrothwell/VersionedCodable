@@ -36,9 +36,9 @@ final class VersionedCodableJSONTests: XCTestCase {
             versioned: Poem.PoemV1.self,
             from: oldPoem)) { error in
                 switch error {
-                case VersionedDecodingError.fieldNoLongerValid:
-                    // ok
-                    break
+                case VersionedDecodingError.fieldNoLongerValid(let context):
+                    XCTAssertEqual("poem", context.codingPath[0].stringValue)
+                    XCTAssertEqual("Poem is no longer optional", context.debugDescription)
                 default:
                     XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.fieldNoLongerValid`, got: \(error))")
                 }

@@ -48,7 +48,10 @@ struct Poem: VersionedCodable {
         init(from old: PreviousVersion) throws {
             self.author = old.author
             guard let poem = old.poem else {
-                throw VersionedDecodingError.fieldNoLongerValid
+                throw VersionedDecodingError.fieldNoLongerValid(
+                    DecodingError.Context(codingPath: [CodingKeys.poem],
+                                          debugDescription: "Poem is no longer optional")
+                )
             }
             self.poem = poem
         }
