@@ -1,4 +1,4 @@
-# ``VersionedCodable``
+# VersionedCodable
 
 A wrapper around Swift's `Codable` that allows you to version your `Codable` type, and facilitate incremental migrations from older versions.
 
@@ -36,8 +36,9 @@ extension HyperCardDecoder {
     public func decode<ExpectedType: VersionedCodable>(
         versioned expectedType: ExpectedType.Type,
         from data: Data) throws -> ExpectedType {
-            try ExpectedType.decodeTransparently(from: data,
-                                                 using: { try self.decode($0, from: $1) }) // delegate to your normal decoding logic
+            try ExpectedType.decodeTransparently(
+                from: data,
+                using: { try self.decode($0, from: $1) }) // delegate decoding to your decoder's usual logic
     }
 }
 ```
@@ -50,12 +51,12 @@ When encoding, the version is always encoded as `version` at the top level. It i
 let data = try JSONEncoder().encode(versioned: poem)
 ```
 
-Again, for encoders and decoders that aren't the built-in `JSONEncoder` and `PropertyListDecoder`, define this extension:
+For encoders and decoders that aren't the built-in `JSONEncoder` and `PropertyListDecoder`, you need to define this extension:
 
 ```swift
 extension HyperCardEncoder {
     public func encode(versioned value: any VersionedCodable) throws -> Foundation.Data {
-        try value.encodeTransparently { try self.encode($0) } // again, delegate to your normal encoding logic
+        try value.encodeTransparently { try self.encode($0) } // delegate encoding to your encoder's usual logic
     }
 }
 ```

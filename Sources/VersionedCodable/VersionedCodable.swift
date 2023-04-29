@@ -4,7 +4,8 @@ import Foundation
 /// A type that can convert itself into and out of an external representation, which is versioned and can be
 /// decoded from old versions of itself.
 ///
-/// Should be used with the extension on the Foundation decoders (e.g. ``JSONEncoder/encode(versioned:)``, ``PropertyListDecoder/decode(versioned:from:)``.)
+/// Should be used with the extensions on the Foundation decoders (e.g. `JSONEncoder/encode(versioned:)`,
+/// `PropertyListDecoder/decode(versioned:from:)`.)
 ///
 /// You can also implement support in other decoders using ``encodeTransparently(using:)`` and ``decodeTransparently(from:using:)``.
 ///
