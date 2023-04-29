@@ -2,11 +2,11 @@
 
 A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and facilitates incremental migrations from older versions.
 
-Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduces the maintenance burden of making potentially breaking changes to your types. This is especially useful for document types where things get added, refactored, and moved around.
+Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduces the maintenance burden of making potentially breaking changes to your types. This is especially useful for document types where things regularly get added, refactored, and moved around.
 
 ⚠️ **Danger:** ``VersionedCodable`` is still under active development and the API has not stabilised yet. It should be safe to use, but please be careful if you include it in your production projects.
 
-Currently, only encoding and decoding using the built-in JSON and property list encoders/decoders are supported. You use an extension with the signature `decode(versioned:from:)` to decode, and `encode(versioned:)` to encode.
+You can encode and decode using extensions for `Foundation`'s built-in JSON and property list encoders/decoders. It's also easy to add support to other encoders and decoders.
 
 ## Problem statement
 `VersionedCodable` deals with a very specific use case where there is a `version` key in the encoded object, and it is a sibling of other keys in the object. For example, this:
@@ -19,14 +19,31 @@ Currently, only encoding and decoding using the built-in JSON and property list 
 }
 ```
 
-...would be a representation of this:
+```
+
+However, you might still need to be able to handle documents in an older version of the format...
+
+```json
+{
+    "version": 1,
+    "author": "Anonymous",
+    "poem": [
+        "An epicure dining at Crewe",
+        "Found a rather large mouse in his stew",
+        "Cried the waiter: Don't shout",
+        "And wave it about",
+        "Or the rest will be wanting one too!"
+    ]
+}
+```
+
+...and ultimately, all you want is to be able to decode into your current type, which is this, so you can use it in your app:
 
 ```swift
 struct Poem {
     var author: String
     var poem: String
 }
-```
 
 
 ## How to use it

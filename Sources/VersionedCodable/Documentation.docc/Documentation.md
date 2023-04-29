@@ -55,7 +55,7 @@ Again, for encoders and decoders that aren't the built-in `JSONEncoder` and `Pro
 ```swift
 extension HyperCardEncoder {
     public func encode(versioned value: any VersionedCodable) throws -> Foundation.Data {
-        try value.encodeTransparently { try self.encode($0) }
+        try value.encodeTransparently { try self.encode($0) } // again, delegate to your normal encoding logic
     }
 }
 ```
