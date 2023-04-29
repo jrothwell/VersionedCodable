@@ -101,7 +101,7 @@ This is mainly intended for situations where you are encoding and decoding compl
 
 ## Still Missing - Wish List
 
-- [X] Add support for property lists
-- [ ] Extend `Encoder` and `Decoder` to be able to deal with things other than JSON and property lists---may be difficult since not all encoders behave in the same way. May also require some kind of wrapper type since you can't override *and* delegate to the default implementation at the same time.
+- [X] ~~Add support for property lists~~ - Done!
+- [X] ~~Extend `Encoder` and `Decoder` to be able to deal with things other than JSON and property lists---may be difficult since not all encoders behave in the same way. May also require some kind of wrapper type since you can't override *and* delegate to the default implementation at the same time.~~ - Done! (Requires a little extra work to support it but it's minimal.)
 - [ ] (?) Potentially allow different keypaths to the version field
-- [ ] (?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`. It would also run the risk that backported releases to older versions would have no automatic migration path.)
+- [ ] ~~(?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`. It would also run the risk that backported releases to older versions would have no automatic migration path.)~~ Won't do because it increases the risk of diverging document versions with no guaranteed migration path when maintaining older versions of the system.
