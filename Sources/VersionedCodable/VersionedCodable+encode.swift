@@ -20,7 +20,7 @@ extension VersionedCodable {
     /// - Parameter using: The value to encode as a property list. Must conform to
     ///   ``VersionedCodable`` and thus supply a ``VersionedCodable/version`` value.
     /// - Returns: `self`, encoded by the `encode` parameter.
-    func encodeTransparently(using encode: (Encodable) throws -> Data) rethrows -> Data {
+    public func encodeTransparently(using encode: (Encodable) throws -> Data) rethrows -> Data {
         try encode(VersionedCodableWritingWrapper(wrapped: self))
     }
 }
