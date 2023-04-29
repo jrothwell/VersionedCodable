@@ -11,7 +11,7 @@ extension VersionedCodable {
     
     /// Returns a value of the type you specify, where the type is versioned, delegating the
     /// decoding to `decode` function you provide. It  will try and find a version of the type that
-    /// matches the version (if any) encoded in the property list.
+    /// matches the version (if any) encoded in the property list and transparently decode it.
     /// - Parameters:
     ///   - data: The data to decode. Will be passed to `decode`.
     ///   - decode: A function capable of decoding a `Decodable` type from `data`.
@@ -19,7 +19,7 @@ extension VersionedCodable {
     /// - Warning: The return type of `decode` is **not** constrained to the expected
     ///   type (as provided as its first parameter.) Returning a type which cannot be downcast
     ///   to the expected type has undefined behaviour and will result in a crash.
-    public static func decode<ExpectedType: VersionedCodable>(
+    public static func decodeTransparently<ExpectedType: VersionedCodable>(
         from data: Data,
         using decode: ((Decodable.Type, Data) throws -> Decodable)
     ) throws -> ExpectedType {
@@ -31,7 +31,7 @@ extension VersionedCodable {
             throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
         } else {
             return try ExpectedType(
-                from: Self.PreviousVersion.decode(
+                from: Self.PreviousVersion.decodeTransparently(
                     from: data,
                     using: decode))
         }

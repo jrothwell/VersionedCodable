@@ -19,7 +19,7 @@ extension JSONDecoder {
     public func decode<ExpectedType: VersionedCodable>(
         versioned expectedType: ExpectedType.Type,
         from data: Data) throws -> ExpectedType {
-            try ExpectedType.decode(from: data,
+            try ExpectedType.decodeTransparently(from: data,
                                     using: { try self.decode($0, from: $1) })
     }
 }

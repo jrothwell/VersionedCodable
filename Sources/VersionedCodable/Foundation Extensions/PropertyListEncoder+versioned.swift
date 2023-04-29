@@ -23,6 +23,6 @@ extension PropertyListEncoder {
     ///   ``VersionedCodable`` and thus supply a ``VersionedCodable/version`` value.
     /// - Returns: The encoded property list, complete with a `version` field.
     public func encode(versioned value: any VersionedCodable) throws -> Foundation.Data {
-        try encode(VersionedCodableWritingWrapper(wrapped: value))
+        try value.encodeTransparently { try self.encode($0) }
     }
 }

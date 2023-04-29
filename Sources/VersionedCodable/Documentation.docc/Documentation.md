@@ -23,7 +23,7 @@ You make your type versioned by making it conform to ``VersionedCodable``. This 
 
 
 ## Decoding a versioned type
-``VersionedCodable`` provides extensions to Foundation's built-in `JSONDecoder`/`JSONEncoder` and `PropertyListDecoder`/`PropertyListEncoder` types to allow you decode these out of the box, like this:
+``VersionedCodable`` provides extensions to Foundation's built-in `JSONDecoder` and `PropertyListDecoder` types to allow you decode these out of the box, like this:
 
 ```swift
 let poem = try JSONDecoder().decode(versioned: Poem.self, from: oldPoem)
@@ -36,8 +36,8 @@ extension HyperCardDecoder {
     public func decode<ExpectedType: VersionedCodable>(
         versioned expectedType: ExpectedType.Type,
         from data: Data) throws -> ExpectedType {
-            try ExpectedType.decode(from: data,
-                                    using: { try self.decode($0, from: $1) }) // delegate to your normal decoding logic
+            try ExpectedType.decodeTransparently(from: data,
+                                                 using: { try self.decode($0, from: $1) }) // delegate to your normal decoding logic
     }
 }
 ```
@@ -50,5 +50,14 @@ When encoding, the version is always encoded as `version` at the top level. It i
 let data = try JSONEncoder().encode(versioned: poem)
 ```
 
+Again, for encoders and decoders that aren't the built-in `JSONEncoder` and `PropertyListDecoder`, define this extension:
 
+```swift
+extension HyperCardEncoder {
+    public func encode(versioned value: any VersionedCodable) throws -> Foundation.Data {
+        try value.encodeTransparently { try self.encode($0) }
+    }
+}
+```
 
+(Internally this uses your encoding function to encode a wrapper type, which encodes all the keys of your contained type followed by a `version` key. But you don't need to create this yourself.)
