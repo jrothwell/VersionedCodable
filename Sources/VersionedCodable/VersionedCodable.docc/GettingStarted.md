@@ -6,6 +6,10 @@ Make a `Codable` type conform to ``VersionedCodable/VersionedCodable``, build a 
 
 For `Codable` types that change over time where you might need to continue to decode data in the old format, ``VersionedCodable/VersionedCodable`` allows you to make changes in a way where you can rationalise migrations.
 
+Migrations happen on a step-by-step basis. That is, older versions of the type get decoded using their original decoding logic, then get transformed into successively newer types until we reach the target type.
+
+![Three type definitions next to each other: Poem, PoemV1, and PoemPreV1. Poem has a `static let version = 2` and has a reference to PoemV1 as its `PreviousVersion`. PoemV1's version is 1 and its PreviousVersion is PoemPreV1, whose version is nil. There's also an initializer that allows a PoemV1 to be initialized from a PoemPreV1, and a PoemV2 from a `PoemV1`.](VersionedCodable.png)
+
 * When you encode a ``VersionedCodable/VersionedCodable`` type using the extensions on the `Foundation` encoders or using ``VersionedCodable/VersionedCodable/encodeTransparently(using:)``, it encodes an additional `version` key as a sibling to the other keys. This matches the value of ``VersionedCodable/VersionedCodable/version``.
 * When you decode a type in the using the extensions on the `Foundation` decoders or using ``VersionedCodable/VersionedCodable/decodeTransparently(from:using:)``, it checks to see if the ``VersionedCodable/VersionedCodable/version`` property of the type matches the `version` field in the data it wants to decode.
    * **If it matches,** then it decodes the type in the usual way.
