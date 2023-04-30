@@ -1,4 +1,4 @@
-# VersionedCodable ![main workflow](https://github.com/jrothwell/VersionedCodable/actions/workflows/swift.yml/badge.svg)
+# VersionedCodable ![main workflow](https://github.com/jrothwell/VersionedCodable/actions/workflows/swift.yml/badge.svg) [![Swift version compatibility](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fjrothwell%2FVersionedCodable%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/jrothwell/VersionedCodable) [![Swift platform compatibility](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fjrothwell%2FVersionedCodable%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/jrothwell/VersionedCodable)
 
 A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and facilitates incremental migrations from older versions. This handles a specific case where you want to be able to change the structure of a type, while retaining the ability to decode older versions of it and reason about what has changed with each version.
 
