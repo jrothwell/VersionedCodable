@@ -24,14 +24,24 @@ extension VersionedCodable {
         using decode: ((Decodable.Type, Data) throws -> Decodable)
     ) throws -> ExpectedType {
         let documentVersion = (try decode(VersionedDocument.self, data) as? VersionedDocument)?.version
-        
-        if documentVersion == Self.version {
+        return try decodeTransparently(targetVersion: documentVersion,
+                                       from: data,
+                                       using: decode)
+    }
+    
+    private static func decodeTransparently<ExpectedType: VersionedCodable>(
+        targetVersion: Int?,
+        from data: Data,
+        using decode: ((Decodable.Type, Data) throws -> Decodable)
+    ) throws -> ExpectedType {
+        if targetVersion == Self.version {
             return try decode(Self.self, data) as! ExpectedType
         } else if Self.PreviousVersion.self == NothingEarlier.self {
             throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
         } else {
             return try ExpectedType(
                 from: Self.PreviousVersion.decodeTransparently(
+                    targetVersion: targetVersion,
                     from: data,
                     using: decode))
         }
