@@ -53,7 +53,7 @@ final class VersionedCodablePropertyListTests: XCTestCase {
                 case VersionedDecodingError.unsupportedVersion(let lastTriedVersion):
                     XCTAssertTrue(lastTriedVersion == Poem.PoemPreV1.self)
                 default:
-                    XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.noOlderVersionAvailable`, got: `\(error)`)")
+                    XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.unsupportedVersion(tried:)`, got: `\(error)`)")
                 }
             }
     }

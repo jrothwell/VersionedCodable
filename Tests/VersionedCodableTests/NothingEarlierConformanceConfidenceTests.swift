@@ -22,7 +22,7 @@ final class NothingEarlierConformanceConfidenceTests: XCTestCase {
             case VersionedDecodingError.unsupportedVersion(let currentVersion):
                 XCTAssertTrue(currentVersion == NothingEarlier.self)
             default:
-                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.noOlderVersionAvailable`, got: \(error)")
+                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.unsupportedVersion(tried:)`, got: \(error)")
             }
 
         }
@@ -35,7 +35,7 @@ final class NothingEarlierConformanceConfidenceTests: XCTestCase {
             case VersionedDecodingError.unsupportedVersion(let currentVersion):
                 XCTAssertTrue(currentVersion == VersionedCodableWithoutOlderVersion.self)
             default:
-                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.noOlderVersionAvailable`, got: \(error)")
+                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.unsupportedVersion(tried:)`, got: \(error)")
             }
         }
     }
