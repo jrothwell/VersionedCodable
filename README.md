@@ -108,7 +108,7 @@ The chain of previous versions of the type can be as long as the call stack will
 
 If you're converting an older type into a newer type and run across some data that means it no longer makes sense in the new data model, you can throw a `VersionedDecodingError.fieldNoLongerValid`.
 
-For the earliest version of the type with nothing older to try decoding, you set `PreviousVersion` to `NothingOlder`. This is necessary to make the compiler work. Any attempts to decode a type not covered by the chain of `VersionedCodable`s will throw a `VersionedDecodingError.unsupportedVersion(tried:)`.
+For the earliest version of the type with nothing older to try decoding, you set `PreviousVersion` to `NothingEarlier`. This is necessary to make the compiler work. Any attempts to decode a type not covered by the chain of `VersionedCodable`s will throw a `VersionedDecodingError.unsupportedVersion(tried:)`.
 
 ```swift
 struct PoemV1 {
@@ -119,8 +119,8 @@ struct PoemV1 {
 extension PoemOldVersion: VersionedCodable {
     static let version: Int? = 1
     
-    typealias PreviousVersion = NothingOlder
-    // You don't need to provide an initializer here since you've defined `PreviousVersion` as `NothingOlder.`
+    typealias PreviousVersion = NothingEarlier
+    // You don't need to provide an initializer here since you've defined `PreviousVersion` as `NothingEarlier.`
 }
 ```
 
