@@ -34,11 +34,10 @@ dependencies: [
 {
     "version": 2,
     "author": "Anonymous",
-    "poem": "An epicure dining at Crewe\nFound a rather large mouse in his stew\nCried the waiter: Don't shout\nAnd wave it about\nOr the rest will be wanting one too!"
+    "poem": "An epicure dining at Crewe\nFound a rather large mouse in his stew"
 }
 ```
 
-```
 
 However, you might still need to be able to handle documents in an older version of the format...
 
@@ -48,10 +47,7 @@ However, you might still need to be able to handle documents in an older version
     "author": "Anonymous",
     "poem": [
         "An epicure dining at Crewe",
-        "Found a rather large mouse in his stew",
-        "Cried the waiter: Don't shout",
-        "And wave it about",
-        "Or the rest will be wanting one too!"
+        "Found a rather large mouse in his stew"
     ]
 }
 ```
