@@ -74,5 +74,4 @@ final class VersionedCodablePropertyListTests: XCTestCase {
         }
     }
 
-
 }
