@@ -112,6 +112,8 @@ extension Poem: VersionedCodable {
 }
 ```
 
+- Tip: It is a very good idea to write acceptance tests that test you can decode old versions of your types. ``VersionedCodable/VersionedCodable`` provides the types and logic to make this kind of migration easy, **but** you still need to think carefully about how you map fields between different versions of your types. A comprehensive set of test cases will give you confidence that you can still decode earlier versions of documents, **and** that what comes out of them is what you expect.
+
 ## Decoding a versioned type
 ``VersionedCodable`` provides extensions to Foundation's built-in `JSONDecoder` and `PropertyListDecoder` types to allow you decode these out of the box, like this:
 
