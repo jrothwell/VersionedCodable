@@ -21,7 +21,7 @@ You can encode and decode using extensions for `Foundation`'s built-in JSON and 
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/jrothwell/VersionedCodable", from: "1.0.0"),
+    .package(url: "https://github.com/jrothwell/VersionedCodable", from: "1.0.1"),
 ],
 ```
 
@@ -32,9 +32,10 @@ dependencies: [
 
 ```json
 {
-    "version": 2,
+    "version": 3,
     "author": "Anonymous",
-    "poem": "An epicure dining at Crewe\nFound a rather large mouse in his stew"
+    "poem": "An epicure dining at Crewe\nFound a rather large mouse in his stew",
+    "rating": "love"
 }
 ```
 
@@ -43,12 +44,10 @@ However, you might still need to be able to handle documents in an older version
 
 ```json
 {
-    "version": 1,
+    "version": 2,
     "author": "Anonymous",
-    "poem": [
-        "An epicure dining at Crewe",
-        "Found a rather large mouse in his stew"
-    ]
+    "poem": "An epicure dining at Crewe\nFound a rather large mouse in his stew",
+    "starRating": 4
 }
 ```
 
@@ -58,6 +57,11 @@ However, you might still need to be able to handle documents in an older version
 struct Poem {
     var author: String
     var poem: String
+    var rating: Rating
+    
+    enum Rating: String, Codable {
+        case love, meh, hate
+    }
 }
 ```
 
@@ -71,29 +75,43 @@ extension Poem: VersionedCodable {
     // This will be the contents of the `version` field when you encode this
     // type. It also tells us on decoding that this type is capable of
     // decoding itself from an input with `"version": 2`.
-    static let version: Int? = 2
+    static let version: Int? = 3
     
     // The next oldest version of the `Poem` type.
-    typealias PreviousVersion = PoemOldVersion
+    typealias PreviousVersion = PoemV2
     
     
-    // Now we need to specify how to make a `Poem` from the old version of the
-    // type. For the sake of argument: `PoemOldVersion` has an array of `[String]` 
-    // rather than one big blob separated by newlines, so we need to account for
-    // this.
-    init(from old: PoemOldVersion) throws {
-        self.author = old.author
-        self.poem = poem.joined(separator: "\n")
+    // Now we need to specify how to make a `Poem` from the previous version of the
+    // type. For the sake of argument, we are replacing the numeric `starRating`
+    // field with a "love/meh/hate" rating.
+    init(from oldVersion: OldPoem) {
+        self.author = oldVersion.author
+        self.poem = oldVersion.poem
+        switch oldVersion.starRating {
+        case ...2:
+            self.rating = .hate
+        case 3:
+            self.rating = .meh
+        case 4...:
+            self.rating = .love
+        default: // the field is no longer valid in the new model, so we throw an error
+            throw VersionedDecodingError.fieldNoLongerValid(
+                DecodingError.Context(
+                    codingPath: [CodingKeys.rating],
+                    debugDescription: "Star rating \(oldVersion.starRating) is invalid")
+        }
     }
 }
 ```
 
 The chain of previous versions of the type can be as long as the call stack will allow.
 
-For the oldest version of the type with nothing older, you set `PreviousVersion` to `NothingOlder`. This is necessary to make the compiler work. Any attempts to decode a type not covered by the chain of `VersionedCodable`s will throw a `VersionedDecodingError.noOlderVersionAvailable`.
+If you're converting an older type into a newer type and run across some data that means it no longer makes sense in the new data model, you can throw a `VersionedDecodingError.fieldNoLongerValid`.
+
+For the earliest version of the type with nothing older to try decoding, you set `PreviousVersion` to `NothingOlder`. This is necessary to make the compiler work. Any attempts to decode a type not covered by the chain of `VersionedCodable`s will throw a `VersionedDecodingError.unsupportedVersion(tried:)`.
 
 ```swift
-struct PoemOldVersion {
+struct PoemV1 {
     var author: String
     var poem: [String]
 }
