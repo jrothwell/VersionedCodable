@@ -4,6 +4,13 @@ A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/s
 
 Migrations happen on a step-by-step basis. That is, older versions of the type get decoded using their original decoding logic, then get transformed into successively newer types until we reach the target type. (e.g. if we have a v1 document and we want a v3 type, we decode using the v1 type, then transform to v2, then to v3.)
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jrothwell/VersionedCodable/main/Sources/VersionedCodable/VersionedCodable.docc/Resources/VersionedCodable%7Edark%402x.png">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/jrothwell/VersionedCodable/main/Sources/VersionedCodable/VersionedCodable.docc/Resources/VersionedCodable%402x.png">
+  <img alt="Three type definitions next to each other: Poem, PoemV1, and PoemPreV1. Poem has a `static let version = 2` and has a reference to PoemV1 as its `PreviousVersion`. PoemV1's version is 1 and its PreviousVersion is PoemPreV1, whose version is nil. There's also an initializer that allows a PoemV1 to be initialized from a PoemPreV1, and a PoemV2 from a `PoemV1`." src="https://raw.githubusercontent.com/jrothwell/VersionedCodable/main/Sources/VersionedCodable/VersionedCodable.docc/Resources/VersionedCodable%402x.png">
+</picture>
+
+
 You can encode and decode using extensions for `Foundation`'s built-in JSON and property list encoders/decoders. It's also easy to add support to other encoders and decoders.
 
 ## Quick Start
