@@ -21,7 +21,7 @@ You can encode and decode using extensions for `Foundation`'s built-in JSON and 
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/jrothwell/VersionedCodable", from: "1.0.1"),
+    .package(url: "https://github.com/jrothwell/VersionedCodable.git", .upToNextMajor(from: "1.0.0"))
 ],
 ```
 
