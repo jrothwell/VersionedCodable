@@ -74,7 +74,7 @@ extension Poem: VersionedCodable {
     // Specify the current version.
     // This will be the contents of the `version` field when you encode this
     // type. It also tells us on decoding that this type is capable of
-    // decoding itself from an input with `"version": 2`.
+    // decoding itself from an input with `"version": 3`.
     static let version: Int? = 3
     
     // The next oldest version of the `Poem` type.
