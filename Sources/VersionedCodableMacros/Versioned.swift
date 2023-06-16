@@ -22,6 +22,17 @@ extension Versioned: MemberMacro {
                                         "static let version: Int? = \(raw: version.text)"
                                        ]
     }
+}
+
+extension Versioned: ConformanceMacro {
+    public static func expansion<Declaration, Context>(
+        of node: SwiftSyntax.AttributeSyntax,
+        providingConformancesOf declaration: Declaration,
+        in context: Context) throws ->
+    [(SwiftSyntax.TypeSyntax, SwiftSyntax.GenericWhereClauseSyntax?)] where Declaration : SwiftSyntax.DeclGroupSyntax,
+    Context : SwiftSyntaxMacros.MacroExpansionContext {
+        return [("VersionedCodable", nil)]
+    }
     
     
 }
