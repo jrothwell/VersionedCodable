@@ -8,6 +8,8 @@
 import Foundation
 import VersionedCodable
 
+
+@versioned(version: 4)
 struct Poem: VersionedCodable {
     var author: Author?
     var lines: [String]
@@ -18,8 +20,6 @@ struct Poem: VersionedCodable {
         var died: Date?
     }
 
-    
-    static let version: Int? = 4
     typealias PreviousVersion = PoemV3
     init(from old: PreviousVersion) throws {
         self.lines = old.lines
@@ -31,19 +31,19 @@ struct Poem: VersionedCodable {
     }
 
     
+    @versioned(version: nil)
     struct PoemPreV1: VersionedCodable {
         var author: String?
         var poem: String?
         
-        static let version: Int? = nil
         typealias PreviousVersion = NothingEarlier
     }
     
+    @versioned(version: 1)
     struct PoemV1: VersionedCodable {
         var author: String?
         var poem: String
         
-        static let version: Int? = 1
         typealias PreviousVersion = PoemPreV1
         init(from old: PreviousVersion) throws {
             self.author = old.author
@@ -58,13 +58,13 @@ struct Poem: VersionedCodable {
 
     }
     
+    @versioned(version: 2)
     struct PoemV2: VersionedCodable {
         var authorName: String?
         var authorDateOfBirth: Date?
         var authorDateOfDeath: Date?
         var poem: String
         
-        static let version: Int? = 2
         typealias PreviousVersion = PoemV1
         init(from old: PreviousVersion) throws {
             self.authorName = old.author
@@ -72,13 +72,13 @@ struct Poem: VersionedCodable {
         }
     }
     
+    @versioned(version: 3)
     struct PoemV3: VersionedCodable {
         var authorName: String?
         var authorDateOfBirth: Date?
         var authorDateOfDeath: Date?
         var lines: [String]
         
-        static let version: Int? = 3
         typealias PreviousVersion = PoemV2
         init(from old: PreviousVersion) {
             self.authorName = old.authorName
@@ -87,8 +87,8 @@ struct Poem: VersionedCodable {
     }
 }
 
+@versioned(version: 1)
 struct PoemWithClash: VersionedCodable {
-    static let version: Int? = 1
     typealias PreviousVersion = NothingEarlier
     
     var content: String
