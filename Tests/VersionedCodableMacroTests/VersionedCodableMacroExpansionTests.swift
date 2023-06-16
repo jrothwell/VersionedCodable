@@ -14,7 +14,7 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
     func testSimpleExpansion() throws {
         assertMacroExpansion(
             """
-            @Versioned(version: 1)
+            @versioned(version: 1)
             struct Poem {
                 var author: String
                 var body: String
@@ -23,18 +23,18 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
             expandedSource:
             """
             
-            struct Poem {
+            struct Poem: VersionedCodable {
                 var author: String
                 var body: String
                 static let version: Int? = 1
             }
-            """, macros: ["Versioned": Versioned.self])
+            """, macros: ["versioned": Versioned.self])
     }
     
     func testMoreComplexExpansion() throws {
         assertMacroExpansion(
             """
-            @Versioned(version: 42)
+            @versioned(version: 42)
             struct Poem {
                 var author: String
                 var body: String
@@ -43,18 +43,18 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
             expandedSource:
             """
             
-            struct Poem {
+            struct Poem: VersionedCodable {
                 var author: String
                 var body: String
                 static let version: Int? = 42
             }
-            """, macros: ["Versioned": Versioned.self])
+            """, macros: ["versioned": Versioned.self])
     }
     
     func testExpansionWithNilVersion() throws {
         assertMacroExpansion(
             """
-            @Versioned(version: nil)
+            @versioned(version: nil)
             struct Poem {
                 var author: String
                 var body: String
@@ -63,12 +63,12 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
             expandedSource:
             """
             
-            struct Poem {
+            struct Poem: VersionedCodable {
                 var author: String
                 var body: String
                 static let version: Int? = nil
             }
-            """, macros: ["Versioned": Versioned.self])
+            """, macros: ["versioned": Versioned.self])
     }
 
 }
