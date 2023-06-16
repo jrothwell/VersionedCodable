@@ -7,22 +7,68 @@
 
 import XCTest
 import SwiftSyntaxMacrosTestSupport
+@testable import VersionedCodableMacros
 
 final class VersionedCodableMacroExpansionTests: XCTestCase {
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    func testSimpleExpansion() throws {
+        assertMacroExpansion(
+            """
+            @Versioned(version: 1)
+            struct Poem {
+                var author: String
+                var body: String
+            }
+            """,
+            expandedSource:
+            """
+            
+            struct Poem {
+                var author: String
+                var body: String
+                static let version: Int? = 1
+            }
+            """, macros: ["Versioned": Versioned.self])
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
+    
+    func testMoreComplexExpansion() throws {
+        assertMacroExpansion(
+            """
+            @Versioned(version: 42)
+            struct Poem {
+                var author: String
+                var body: String
+            }
+            """,
+            expandedSource:
+            """
+            
+            struct Poem {
+                var author: String
+                var body: String
+                static let version: Int? = 42
+            }
+            """, macros: ["Versioned": Versioned.self])
+    }
+    
+    func testExpansionWithNilVersion() throws {
+        assertMacroExpansion(
+            """
+            @Versioned(version: nil)
+            struct Poem {
+                var author: String
+                var body: String
+            }
+            """,
+            expandedSource:
+            """
+            
+            struct Poem {
+                var author: String
+                var body: String
+                static let version: Int? = nil
+            }
+            """, macros: ["Versioned": Versioned.self])
     }
 
 }

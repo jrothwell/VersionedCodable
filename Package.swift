@@ -36,7 +36,7 @@ let package = Package(
         
         .target(
             name: "VersionedCodable",
-            dependencies: []),
+            dependencies: ["VersionedCodableMacros"]),
         .testTarget(
             name: "VersionedCodableTests",
             dependencies: ["VersionedCodable"],
