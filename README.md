@@ -155,9 +155,9 @@ Not really. [SwiftData](https://developer.apple.com/xcode/swiftdata/), new in iO
 
 However, there are a few limitations to consider:
 * `@Model` types have to be classes.
-* `SwiftData` is part of the OS, and **not** part of Swift Foundation like `Codable` is. If you're intending to target non-Apple platforms or OS versions earlier than the ones that'll be released this year, you may find your code doesn't compile if it references `SwiftData`.
+* `SwiftData` is part of the OS, and **not** part of Swift's standard library like `Codable` is. If you're intending to target non-Apple platforms or OS versions earlier than the ones that'll be released this year, you may find your code doesn't compile if it references `SwiftData`.
 
-SwiftData is relatively new and has only recently been announced. As I learn more about it, I will be able to provide more insights about where its strengths lie. I encourage you to experiment and evaluate possible solutions as well. But my current advice is:
+SwiftData is relatively new and has only recently been announced. As I learn more about it, I will be able to provide more insights about where its strengths lie. I encourage you to experiment and find the solution that works for you as well. But my current advice is:
 
 * If you need a very lightweight way of versioning your `Codable` types and will handle persistence yourself---consider `VersionedCodable`.
 * If you're creating very complex types that have relations between them, and you don't need to worry about OS versions other than the newest Apple platforms---consider `SwiftData`.
