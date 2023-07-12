@@ -149,6 +149,19 @@ This is mainly intended for situations where you are encoding and decoding compl
 
 `VersionedCodable` was originally developed for use in [Unspool](https://unspool.app), a photo tagging app for MacOS which is not ready for the public yet.
 
+### Hasn't this been Sherlocked by `SwiftData`?
+
+Not really. [SwiftData](https://developer.apple.com/xcode/swiftdata/), new in iOS/iPadOS/tvOS 17, macOS 14, watchOS 10, and (presumably) visionOS, is a new Swifty interface over [Core Data](https://developer.apple.com/documentation/coredata). It does support schema versioning and has a number of ways to configure how you want your data persisted. It even works with `DocumentGroup`.
+
+However, there are a few limitations to consider:
+* `@Model` types have to be classes.
+* `SwiftData` is part of the OS, and **not** part of Swift Foundation like `Codable` is. If you're intending to target non-Apple platforms or OS versions earlier than the ones that'll be released this year, you may find your code doesn't compile if it references `SwiftData`.
+
+SwiftData is relatively new and has only recently been announced. As I learn more about it, I will be able to provide more insights about where its strengths lie. I encourage you to experiment and evaluate possible solutions as well. But my current advice is:
+
+* If you need a very lightweight way of versioning your `Codable` types and will handle persistence yourself---consider `VersionedCodable`.
+* If you're creating very complex types that have relations between them, and you don't need to worry about OS versions other than the newest Apple platforms---consider `SwiftData`.
+
 ## Still Missing - Wish List
 
 - [ ] Allow different keypaths to the version field
