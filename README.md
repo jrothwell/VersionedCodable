@@ -149,7 +149,29 @@ This is mainly intended for situations where you are encoding and decoding compl
 
 `VersionedCodable` was originally developed for use in [Unspool](https://unspool.app), a photo tagging app for MacOS which is not ready for the public yet.
 
+### Hasn't this been Sherlocked by `SwiftData`?
+
+Not really. [SwiftData](https://developer.apple.com/xcode/swiftdata/), new in iOS/iPadOS/tvOS 17, macOS 14, watchOS 10, and (presumably) visionOS, is a new Swifty interface over [Core Data](https://developer.apple.com/documentation/coredata). It does support schema versioning and has a number of ways to configure how you want your data persisted. It even works with `DocumentGroup`.
+
+However, there are a few limitations to consider:
+* `@Model` types have to be classes.
+* `SwiftData` is part of the OS, and **not** part of Swift's standard library like `Codable` is. If you're intending to target non-Apple platforms or OS versions earlier than the ones that'll be released this year, you may find your code doesn't compile if it references `SwiftData`.
+
+SwiftData is relatively new and has only recently been announced. As I learn more about it, I will be able to provide more insights about where its strengths lie. I encourage you to experiment and find the solution that works for you as well. But my current advice is:
+
+* If you need a very lightweight way of versioning your `Codable` types and will handle persistence yourself, or if you need to version value types (`struct`s instead of `class`es)---consider `VersionedCodable`.
+* If you're creating very complex types that have relations between them, and you don't need to worry about OS versions other than the newest Apple platforms---consider `SwiftData`.
+
+### Is there a version for Kotlin/Java/Android?
+**No.** `VersionedCodable` is an open-source part of [Unspool](https://unspool.app), a photo tagging app for MacOS which will not have an Android version for the foreseeable future. I don't see why it *wouldn't* be feasible to do something similar in Kotlin, but I would caution that `VersionedCodable` relies heavily on Swift having a built-in encoding/decoding mechanism and an expressive type system. The JVM may make it difficult to achieve the same behaviour in the same way.
+
+### We want to use this in our financial/medical/regulated app but need guarantees about security, provenance, non-infringement, etc.
+Well, I must tell you that [under the terms of the MIT licence](LICENSE.md), `VersionedCodable` 'is provided "AS IS", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement,' and 'in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.'
+
+As a full-time engineer for whom `VersionedCodable` is a side project, I am not in a position to spend any time providing support, fulfilling adopters' regulatory or traceability requirements, or (e.g.) helping you compile your SBOM or SOUP list. You are, of course, welcome to fork it to create a "trusted version," or create your own solution inspired by it.
+
 ## Still Missing - Wish List
 
+- [ ] Swift 5.9 Macros support to significantly reduce boilerplate
 - [ ] Allow different keypaths to the version field
 - [ ] ~~(?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`. It would also run the risk that backported releases to older versions would have no automatic migration path.)~~ Won't do because it increases the risk of diverging document versions with no guaranteed migration path when maintaining older versions of the system.
