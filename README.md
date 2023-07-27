@@ -151,7 +151,7 @@ This is mainly intended for situations where you are encoding and decoding compl
 
 ### Hasn't this been Sherlocked by `SwiftData`?
 
-Not really. [SwiftData](https://developer.apple.com/xcode/swiftdata/), new in iOS/iPadOS/tvOS 17, macOS 14, watchOS 10, and (presumably) visionOS, is a new Swifty interface over [Core Data](https://developer.apple.com/documentation/coredata). It does support schema versioning and has a number of ways to configure how you want your data persisted. It even works with `DocumentGroup`.
+Not really. [SwiftData](https://developer.apple.com/xcode/swiftdata/), new in iOS/iPadOS/tvOS 17, macOS 14, watchOS 10, and visionOS, is a Swifty interface over [Core Data](https://developer.apple.com/documentation/coredata). It does support schema versioning and has a number of ways to configure how you want your data persisted. It even works with `DocumentGroup`.
 
 However, there are a few limitations to consider:
 * `@Model` types have to be classes.
@@ -160,7 +160,7 @@ However, there are a few limitations to consider:
 SwiftData is relatively new and has only recently been announced. As I learn more about it, I will be able to provide more insights about where its strengths lie. I encourage you to experiment and find the solution that works for you as well. But my current advice is:
 
 * If you need a very lightweight way of versioning your `Codable` types and will handle persistence yourself, or if you need to version value types (`struct`s instead of `class`es)---consider `VersionedCodable`.
-* If you're creating very complex types that have relations between them, and you don't need to worry about OS versions other than the newest Apple platforms---consider `SwiftData`.
+* If you're creating very complex types that have relations between them, and you don't need to worry about OS versions other than the newest Apple platforms as of this coming September/October time---consider `SwiftData`.
 
 ### Is there a version for Kotlin/Java/Android?
 **No.** `VersionedCodable` is an open-source part of [Unspool](https://unspool.app), a photo tagging app for MacOS which will not have an Android version for the foreseeable future. I don't see why it *wouldn't* be feasible to do something similar in Kotlin, but I would caution that `VersionedCodable` relies heavily on Swift having a built-in encoding/decoding mechanism and an expressive type system. The JVM may make it difficult to achieve the same behaviour in the same way.
