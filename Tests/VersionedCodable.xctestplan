@@ -18,6 +18,13 @@
         "identifier" : "VersionedCodableTests",
         "name" : "VersionedCodableTests"
       }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "VersionedCodableMacroTests",
+        "name" : "VersionedCodableMacroTests"
+      }
     }
   ],
   "version" : 1
