@@ -12,6 +12,6 @@ import SwiftSyntaxMacros
 @main
 struct VersionedCodablePlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
-        Versioned.self
+        VersionedCodableMacro.self
     ]
 }

@@ -8,9 +8,9 @@ import SwiftSyntax
 import SwiftSyntaxMacros
 import SwiftSyntaxBuilder
 
-public struct Versioned {}
+public struct VersionedCodableMacro {}
 
-extension Versioned: MemberMacro {
+extension VersionedCodableMacro: MemberMacro {
     public static func expansion<Declaration, Context>(
         of node: SwiftSyntax.AttributeSyntax,
         providingMembersOf declaration: Declaration,
@@ -46,7 +46,7 @@ private extension SwiftSyntax.AttributeSyntax {
         
         guard let expression = arguments.filter({
             guard case .identifier(let label) = $0.label?.tokenKind else { return false }
-            return label == "version"
+            return label == "v"
         }).first?.expression else { return nil }
         
 //        if let integerLiteral = expression.as(IntegerLiteralExprSyntax.self) {

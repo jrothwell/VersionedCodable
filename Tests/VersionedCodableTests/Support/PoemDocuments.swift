@@ -9,7 +9,7 @@ import Foundation
 import VersionedCodable
 
 
-@versioned(version: 4)
+@versionedCodable(v: 4)
 struct Poem: VersionedCodable {
     var author: Author?
     var lines: [String]
@@ -31,7 +31,7 @@ struct Poem: VersionedCodable {
     }
 
     
-    @versioned(version: nil)
+    @versionedCodable(v: nil)
     struct PoemPreV1: VersionedCodable {
         var author: String?
         var poem: String?
@@ -39,7 +39,7 @@ struct Poem: VersionedCodable {
         typealias PreviousVersion = NothingEarlier
     }
     
-    @versioned(version: 1)
+    @versionedCodable(v: 1)
     struct PoemV1: VersionedCodable {
         var author: String?
         var poem: String
@@ -58,7 +58,7 @@ struct Poem: VersionedCodable {
 
     }
     
-    @versioned(version: 2)
+    @versionedCodable(v: 2)
     struct PoemV2: VersionedCodable {
         var authorName: String?
         var authorDateOfBirth: Date?
@@ -72,7 +72,7 @@ struct Poem: VersionedCodable {
         }
     }
     
-    @versioned(version: 3)
+    @versionedCodable(v: 3)
     struct PoemV3: VersionedCodable {
         var authorName: String?
         var authorDateOfBirth: Date?
@@ -87,7 +87,7 @@ struct Poem: VersionedCodable {
     }
 }
 
-@versioned(version: 1)
+@versionedCodable(v: 1)
 struct PoemWithClash: VersionedCodable {
     typealias PreviousVersion = NothingEarlier
     
