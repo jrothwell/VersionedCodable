@@ -10,7 +10,7 @@ import VersionedCodable
 
 
 @versioned(version: 4)
-struct Poem {
+struct Poem: VersionedCodable {
     var author: Author?
     var lines: [String]
     
@@ -32,7 +32,7 @@ struct Poem {
 
     
     @versioned(version: nil)
-    struct PoemPreV1 {
+    struct PoemPreV1: VersionedCodable {
         var author: String?
         var poem: String?
         
@@ -40,7 +40,7 @@ struct Poem {
     }
     
     @versioned(version: 1)
-    struct PoemV1 {
+    struct PoemV1: VersionedCodable {
         var author: String?
         var poem: String
         
@@ -59,7 +59,7 @@ struct Poem {
     }
     
     @versioned(version: 2)
-    struct PoemV2 {
+    struct PoemV2: VersionedCodable {
         var authorName: String?
         var authorDateOfBirth: Date?
         var authorDateOfDeath: Date?
@@ -73,7 +73,7 @@ struct Poem {
     }
     
     @versioned(version: 3)
-    struct PoemV3 {
+    struct PoemV3: VersionedCodable {
         var authorName: String?
         var authorDateOfBirth: Date?
         var authorDateOfDeath: Date?
@@ -88,7 +88,7 @@ struct Poem {
 }
 
 @versioned(version: 1)
-struct PoemWithClash {
+struct PoemWithClash: VersionedCodable {
     typealias PreviousVersion = NothingEarlier
     
     var content: String

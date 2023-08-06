@@ -24,18 +24,18 @@ extension Versioned: MemberMacro {
     }
 }
 
-extension Versioned: ConformanceMacro {
-    public static func expansion<Declaration, Context>(
-        of node: SwiftSyntax.AttributeSyntax,
-        providingConformancesOf declaration: Declaration,
-        in context: Context) throws ->
-    [(SwiftSyntax.TypeSyntax, SwiftSyntax.GenericWhereClauseSyntax?)] where Declaration : SwiftSyntax.DeclGroupSyntax,
-    Context : SwiftSyntaxMacros.MacroExpansionContext {
-        return [("VersionedCodable", nil)]
-    }
-    
-    
-}
+//extension Versioned: ConformanceMacro {
+//    public static func expansion<Declaration, Context>(
+//        of node: SwiftSyntax.AttributeSyntax,
+//        providingConformancesOf declaration: Declaration,
+//        in context: Context) throws ->
+//    [(SwiftSyntax.TypeSyntax, SwiftSyntax.GenericWhereClauseSyntax?)] where Declaration : SwiftSyntax.DeclGroupSyntax,
+//    Context : SwiftSyntaxMacros.MacroExpansionContext {
+//        return [("VersionedCodable", nil)]
+//    }
+//    
+//    
+//}
 
 private extension SwiftSyntax.AttributeSyntax {
     var version: TokenSyntax? {

@@ -15,7 +15,7 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
         assertMacroExpansion(
             """
             @versioned(version: 1)
-            struct Poem {
+            struct Poem: VersionedCodable {
                 var author: String
                 var body: String
             }
@@ -35,7 +35,7 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
         assertMacroExpansion(
             """
             @versioned(version: 42)
-            struct Poem {
+            struct Poem: VersionedCodable {
                 var author: String
                 var body: String
             }
@@ -55,7 +55,7 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
         assertMacroExpansion(
             """
             @versioned(version: nil)
-            struct Poem {
+            struct Poem: VersionedCodable {
                 var author: String
                 var body: String
             }
