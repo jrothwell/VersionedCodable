@@ -24,18 +24,15 @@ extension VersionedCodableMacro: MemberMacro {
     }
 }
 
-//extension Versioned: ConformanceMacro {
-//    public static func expansion<Declaration, Context>(
-//        of node: SwiftSyntax.AttributeSyntax,
-//        providingConformancesOf declaration: Declaration,
-//        in context: Context) throws ->
-//    [(SwiftSyntax.TypeSyntax, SwiftSyntax.GenericWhereClauseSyntax?)] where Declaration : SwiftSyntax.DeclGroupSyntax,
-//    Context : SwiftSyntaxMacros.MacroExpansionContext {
-//        return [("VersionedCodable", nil)]
-//    }
-//    
-//    
-//}
+extension VersionedCodableMacro: ExtensionMacro {
+    public static func expansion(of node: SwiftSyntax.AttributeSyntax, attachedTo declaration: some SwiftSyntax.DeclGroupSyntax, providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol, conformingTo protocols: [SwiftSyntax.TypeSyntax], in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
+        [
+            DeclSyntax("extension \(type.trimmed): VersionedCodable {}").cast(ExtensionDeclSyntax.self)
+        ]
+    }
+    
+    
+}
 
 private extension SwiftSyntax.AttributeSyntax {
     var version: TokenSyntax? {
@@ -49,11 +46,7 @@ private extension SwiftSyntax.AttributeSyntax {
             return label == "v"
         }).first?.expression else { return nil }
         
-//        if let integerLiteral = expression.as(IntegerLiteralExprSyntax.self) {
-//            return integerLiteral.digits
-//        } else {
             return expression.firstToken(viewMode: .fixedUp)!
-//        }
     }
 }
 

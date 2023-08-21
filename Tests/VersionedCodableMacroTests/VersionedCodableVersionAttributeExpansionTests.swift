@@ -9,13 +9,13 @@ import XCTest
 import SwiftSyntaxMacrosTestSupport
 @testable import VersionedCodableMacros
 
-final class VersionedCodableMacroExpansionTests: XCTestCase {
+final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
 
     func testSimpleExpansion() throws {
         assertMacroExpansion(
             """
             @versionedCodable(v: 1)
-            struct Poem: VersionedCodable {
+            struct Poem {
                 var author: String
                 var body: String
             }
@@ -23,10 +23,14 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
             expandedSource:
             """
             
-            struct Poem: VersionedCodable {
+            struct Poem {
                 var author: String
                 var body: String
+            
                 static let version: Int? = 1
+            }
+            
+            extension Poem: VersionedCodable {
             }
             """, macros: ["versionedCodable": VersionedCodableMacro.self])
     }
@@ -35,7 +39,7 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
         assertMacroExpansion(
             """
             @versionedCodable(v: 42)
-            struct Poem: VersionedCodable {
+            struct Poem {
                 var author: String
                 var body: String
             }
@@ -43,10 +47,14 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
             expandedSource:
             """
             
-            struct Poem: VersionedCodable {
+            struct Poem {
                 var author: String
                 var body: String
+            
                 static let version: Int? = 42
+            }
+            
+            extension Poem: VersionedCodable {
             }
             """, macros: ["versionedCodable": VersionedCodableMacro.self])
     }
@@ -55,7 +63,7 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
         assertMacroExpansion(
             """
             @versionedCodable(v: nil)
-            struct Poem: VersionedCodable {
+            struct Poem {
                 var author: String
                 var body: String
             }
@@ -63,10 +71,14 @@ final class VersionedCodableMacroExpansionTests: XCTestCase {
             expandedSource:
             """
             
-            struct Poem: VersionedCodable {
+            struct Poem {
                 var author: String
                 var body: String
+            
                 static let version: Int? = nil
+            }
+            
+            extension Poem: VersionedCodable {
             }
             """, macros: ["versionedCodable": VersionedCodableMacro.self])
     }
