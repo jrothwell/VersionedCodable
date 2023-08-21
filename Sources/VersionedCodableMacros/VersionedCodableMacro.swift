@@ -10,24 +10,19 @@ import SwiftSyntaxBuilder
 
 public struct VersionedCodableMacro {}
 
-extension VersionedCodableMacro: MemberMacro {
-    public static func expansion<Declaration, Context>(
-        of node: SwiftSyntax.AttributeSyntax,
-        providingMembersOf declaration: Declaration,
-        in context: Context) throws ->
-    [SwiftSyntax.DeclSyntax] where Declaration : SwiftSyntax.DeclGroupSyntax,
-                                   Context : SwiftSyntaxMacros.MacroExpansionContext {
-                                       guard let version = node.version else { return [] }
-                                       return [
-                                        "static let version: Int? = \(raw: version.text)"
-                                       ]
-    }
-}
-
 extension VersionedCodableMacro: ExtensionMacro {
-    public static func expansion(of node: SwiftSyntax.AttributeSyntax, attachedTo declaration: some SwiftSyntax.DeclGroupSyntax, providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol, conformingTo protocols: [SwiftSyntax.TypeSyntax], in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
-        [
-            DeclSyntax("extension \(type.trimmed): VersionedCodable {}").cast(ExtensionDeclSyntax.self)
+    public static func expansion(of node: SwiftSyntax.AttributeSyntax,
+                                 attachedTo declaration: some SwiftSyntax.DeclGroupSyntax,
+                                 providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol,
+                                 conformingTo protocols: [SwiftSyntax.TypeSyntax], in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
+        guard let version = node.version else { return [] }
+
+        return [
+            DeclSyntax("""
+                       extension \(type.trimmed): VersionedCodable {
+                           static let version: Int? = \(raw: version.text)
+                       }
+                       """).cast(ExtensionDeclSyntax.self)
         ]
     }
     
@@ -46,7 +41,7 @@ private extension SwiftSyntax.AttributeSyntax {
             return label == "v"
         }).first?.expression else { return nil }
         
-            return expression.firstToken(viewMode: .fixedUp)!
+        return expression.firstToken(viewMode: .fixedUp)!
     }
 }
 

@@ -7,8 +7,7 @@
 
 import Foundation
 
-@attached(member, names: named(version))
-@attached(extension, conformances: VersionedCodable)
+@attached(extension, conformances: VersionedCodable, names: named(version))
 public macro versionedCodable(v: Int?) = #externalMacro(
     module: "VersionedCodableMacros",
     type: "VersionedCodableMacro")

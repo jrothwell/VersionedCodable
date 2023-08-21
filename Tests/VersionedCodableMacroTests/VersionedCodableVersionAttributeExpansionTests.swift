@@ -26,11 +26,10 @@ final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
             struct Poem {
                 var author: String
                 var body: String
-            
-                static let version: Int? = 1
             }
             
             extension Poem: VersionedCodable {
+                static let version: Int? = 1
             }
             """, macros: ["versionedCodable": VersionedCodableMacro.self])
     }
@@ -50,11 +49,10 @@ final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
             struct Poem {
                 var author: String
                 var body: String
-            
-                static let version: Int? = 42
             }
             
             extension Poem: VersionedCodable {
+                static let version: Int? = 42
             }
             """, macros: ["versionedCodable": VersionedCodableMacro.self])
     }
@@ -74,11 +72,10 @@ final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
             struct Poem {
                 var author: String
                 var body: String
-            
-                static let version: Int? = nil
             }
             
             extension Poem: VersionedCodable {
+                static let version: Int? = nil
             }
             """, macros: ["versionedCodable": VersionedCodableMacro.self])
     }
