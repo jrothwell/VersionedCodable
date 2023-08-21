@@ -36,7 +36,7 @@ extension VersionedCodableMacro: ExtensionMacro {
 
 private extension SwiftSyntax.AttributeSyntax {
     var version: TokenSyntax? {
-        guard case .argumentList(let arguments) = self.argument else {
+        guard case .argumentList(let arguments) = self.arguments else {
             return nil
         }
         
