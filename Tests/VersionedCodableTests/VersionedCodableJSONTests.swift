@@ -18,7 +18,7 @@ final class VersionedCodableJSONTests: XCTestCase {
         
         
         let migrated = try JSONDecoder().decode(
-            versioned: Poem.PoemV1.self,
+            versioned: PoemV1.self,
             from: oldPoem)
         XCTAssertEqual(migrated.author, "John Smith")
         XCTAssertEqual(migrated.poem, "Hello")
@@ -33,7 +33,7 @@ final class VersionedCodableJSONTests: XCTestCase {
                       """.data(using: .utf8)!
         
         XCTAssertThrowsError(try JSONDecoder().decode(
-            versioned: Poem.PoemV1.self,
+            versioned: PoemV1.self,
             from: oldPoem)) { error in
                 switch error {
                 case VersionedDecodingError.fieldNoLongerValid(let context):
@@ -55,11 +55,11 @@ final class VersionedCodableJSONTests: XCTestCase {
                       """.data(using: .utf8)!
         
         XCTAssertThrowsError(try JSONDecoder().decode(
-            versioned: Poem.PoemV1.self,
+            versioned: PoemV1.self,
             from: oldPoem)) { error in
                 switch error {
                 case VersionedDecodingError.unsupportedVersion(let olderVersion):
-                    XCTAssertTrue(olderVersion == Poem.PoemPreV1.self)
+                    XCTAssertTrue(olderVersion == PoemPreV1.self)
                 default:
                     XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.unsupportedVersion(Poem.PoemPreV1)`, got: \(error))")
                 }

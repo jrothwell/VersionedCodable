@@ -14,7 +14,7 @@ final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
     func testSimpleExpansion() throws {
         assertMacroExpansion(
             """
-            @versionedCodable(v: 1)
+            @versionedCodable(v: 1, previously: PoemOld.self)
             struct Poem {
                 var author: String
                 var body: String
@@ -30,6 +30,7 @@ final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
             
             extension Poem: VersionedCodable {
                 static let version: Int? = 1
+                typealias PreviousVersion = PoemOld
             }
             """, macros: ["versionedCodable": VersionedCodableMacro.self])
     }
@@ -37,7 +38,7 @@ final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
     func testMoreComplexExpansion() throws {
         assertMacroExpansion(
             """
-            @versionedCodable(v: 42)
+            @versionedCodable(v: 42, previously: PoemPrevious.self)
             struct Poem {
                 var author: String
                 var body: String
@@ -53,6 +54,7 @@ final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
             
             extension Poem: VersionedCodable {
                 static let version: Int? = 42
+                typealias PreviousVersion = PoemPrevious
             }
             """, macros: ["versionedCodable": VersionedCodableMacro.self])
     }
@@ -60,7 +62,7 @@ final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
     func testExpansionWithNilVersion() throws {
         assertMacroExpansion(
             """
-            @versionedCodable(v: nil)
+            @versionedCodable(v: nil, previously: PoemOld.self)
             struct Poem {
                 var author: String
                 var body: String
@@ -76,6 +78,31 @@ final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
             
             extension Poem: VersionedCodable {
                 static let version: Int? = nil
+                typealias PreviousVersion = PoemOld
+            }
+            """, macros: ["versionedCodable": VersionedCodableMacro.self])
+    }
+    
+    func testExpansionWithNothingEarlier() throws {
+        assertMacroExpansion(
+            """
+            @versionedCodable(v: nil, previously: NothingEarlier.self)
+            struct Poem {
+                var author: String
+                var body: String
+            }
+            """,
+            expandedSource:
+            """
+            
+            struct Poem {
+                var author: String
+                var body: String
+            }
+            
+            extension Poem: VersionedCodable {
+                static let version: Int? = nil
+                typealias PreviousVersion = NothingEarlier
             }
             """, macros: ["versionedCodable": VersionedCodableMacro.self])
     }
