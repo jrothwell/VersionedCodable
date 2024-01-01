@@ -15,7 +15,7 @@ You can encode and decode using extensions for `Foundation`'s built-in JSON and 
 
 ## Quick Start
 
-**You will need:** Swift 5.7.1 or later.
+**You will need:** Swift 5.9 or later.
 
 **In a Swift package:** Add this line to your `Package.swift` file's dependencies section...
 
