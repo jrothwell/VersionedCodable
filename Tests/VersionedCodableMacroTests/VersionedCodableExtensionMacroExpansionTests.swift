@@ -1,5 +1,5 @@
 //
-//  VersionedCodableMacroExpansionTests.swift
+//  VersionedCodableExtensionMacroExpansionTests.swift
 //  
 //
 //  Created by Jonathan Rothwell on 15/06/2023.
@@ -9,7 +9,7 @@ import XCTest
 import SwiftSyntaxMacrosTestSupport
 @testable import VersionedCodableMacros
 
-final class VersionedCodableVersionAttributeExpansionTests: XCTestCase {
+final class VersionedCodableExtensionMacroExpansionTests: XCTestCase {
 
     func testSimpleExpansion() throws {
         assertMacroExpansion(
