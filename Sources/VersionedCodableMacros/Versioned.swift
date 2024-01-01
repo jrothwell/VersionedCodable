@@ -24,7 +24,24 @@ extension Versioned: MemberMacro {
     }
 }
 
-extension Versioned: ConformanceMacro {
+extension Versioned: ExtensionMacro {
+    public static func expansion(
+        of node: SwiftSyntax.AttributeSyntax,
+        attachedTo declaration: some SwiftSyntax.DeclGroupSyntax,
+        providingExtensionsOf type: some SwiftSyntax.TypeSyntaxProtocol,
+        conformingTo protocols: [SwiftSyntax.TypeSyntax],
+        in context: some SwiftSyntaxMacros.MacroExpansionContext) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
+        
+        let declaredExtension: DeclSyntax =
+        """
+            extension \(type.trimmed): VersionedCodable {}
+        """
+        guard let versionedCodableExtension = declaredExtension.as(ExtensionDeclSyntax.self) else {
+            return []
+        }
+        return [versionedCodableExtension]
+    }
+    
     public static func expansion<Declaration, Context>(
         of node: SwiftSyntax.AttributeSyntax,
         providingConformancesOf declaration: Declaration,
@@ -39,7 +56,7 @@ extension Versioned: ConformanceMacro {
 
 private extension SwiftSyntax.AttributeSyntax {
     var version: TokenSyntax? {
-        guard case .argumentList(let arguments) = self.argument else {
+        guard case .argumentList(let arguments) = self.arguments else {
             return nil
         }
         
