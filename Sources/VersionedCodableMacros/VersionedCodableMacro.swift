@@ -9,7 +9,7 @@ import SwiftSyntaxMacros
 import SwiftSyntaxBuilder
 import SwiftDiagnostics
 
-public enum VersionedCodableMacroError: CustomStringConvertible, Error {
+enum VersionedCodableMacroError: CustomStringConvertible, Error {
     
     /// The current version has not been specified.
     /// - Note: In principle this will not happen, because the arguments for the exported macro are strongly
