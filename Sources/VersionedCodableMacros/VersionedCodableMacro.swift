@@ -60,8 +60,8 @@ extension VersionedCodableMacro: ExtensionMacro {
         return [
             DeclSyntax("""
                        extension \(type.trimmed): VersionedCodable {
-                           static let version: Int? = \(raw: version.text)
-                           typealias PreviousVersion = \(raw: previousVersion.text)
+                           static let version: Int? = \(version)
+                           typealias PreviousVersion = \(previousVersion)
                        }
                        """).cast(ExtensionDeclSyntax.self)
         ]
