@@ -69,20 +69,19 @@ extension VersionedCodableMacro: ExtensionMacro {
 }
 
 private extension LabeledExprListSyntax {
-    var version: TokenSyntax? {
+    var version: ExprSyntax? {
         self.filter({
             guard case .identifier(let label) =
                     $0.label?.tokenKind else { return false }
             return label == "v"
-        }).first?.expression.firstToken(viewMode: .fixedUp)
+        }).first?.expression
     }
     
-    var previousVersion: TokenSyntax? {
-        self.filter({
+    var previousVersion: ExprSyntax? {
+        return self.filter({
             guard case .identifier(let label) = $0.label?.tokenKind else { return false }
             return label == "previously"
-        }).first?.expression.firstToken(viewMode: .fixedUp)
+        }).first?.expression
     }
 
 }
-
