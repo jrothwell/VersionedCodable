@@ -18,27 +18,6 @@ struct SonnetV2: VersionedCodable {
     enum BodyElement: Codable {
         case quatrain([String])
         case couplet([String])
-        
-        init(from decoder: Decoder) throws {
-            let container = try decoder.singleValueContainer()
-            let rawBody = try container.decode(RawBodyElement.self)
-            switch rawBody.kind {
-            case .quatrain:
-                self = .quatrain(rawBody.body)
-            case .couplet:
-                self = .couplet(rawBody.body)
-            }
-        }
-        
-        struct RawBodyElement: Codable {
-            var kind: Kind
-            var body: [String]
-            
-            enum Kind: String, Codable {
-                case quatrain
-                case couplet
-            }
-        }
     }
     
     init(from old: SonnetV1) throws {
