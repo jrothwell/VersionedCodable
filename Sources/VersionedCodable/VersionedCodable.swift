@@ -33,15 +33,14 @@ public protocol VersionedCodable: Codable {
     ///   signals the decoder to throw an error if it can't get a match for this version.
     associatedtype PreviousVersion: VersionedCodable
     
+    associatedtype VersionPathSpecification: VersionedDocumentSpecification = RootVersionKeyVersionedDocumentSpecification
+    
     /// Initializes a new instance of this type from a type of ``PreviousVersion``. This is where to do
     /// mapping between the old and new version of the type.
     /// - Note: You don't need to provide this if ``PreviousVersion`` is ``NothingEarlier``.
     init(from: PreviousVersion) throws
 }
 
-struct VersionedDocument: Codable {
-    var version: Int?
-}
 
 struct VersionedCodableWritingWrapper: Encodable {
     var wrapped: any VersionedCodable
@@ -52,7 +51,7 @@ struct VersionedCodableWritingWrapper: Encodable {
         }
         
         try wrapped.encode(to: encoder)
-        try VersionedDocument(version: type(of: wrapped).version).encode(to: encoder)
+        try RootVersionKeyVersionedDocumentSpecification(version: type(of: wrapped).version).encode(to: encoder)
     }
 }
 

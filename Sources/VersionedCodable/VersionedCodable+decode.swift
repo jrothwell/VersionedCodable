@@ -23,7 +23,7 @@ extension VersionedCodable {
         from data: Data,
         using decode: ((Decodable.Type, Data) throws -> Decodable)
     ) throws -> ExpectedType {
-        let documentVersion = (try decode(VersionedDocument.self, data) as? VersionedDocument)?.version
+        let documentVersion = (try decode(RootVersionKeyVersionedDocumentSpecification.self, data) as? RootVersionKeyVersionedDocumentSpecification)?.version
         return try decodeTransparently(targetVersion: documentVersion,
                                        from: data,
                                        using: decode)
