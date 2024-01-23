@@ -44,6 +44,7 @@ public protocol VersionedCodable: Codable {
 
 struct VersionedCodableWritingWrapper: Encodable {
     var wrapped: any VersionedCodable
+    var spec: any VersionedDocumentSpecification.Type
     
     func encode(to encoder: Encoder) throws {
         guard !wrapped.hasFieldNamedVersion else {
@@ -51,7 +52,7 @@ struct VersionedCodableWritingWrapper: Encodable {
         }
         
         try wrapped.encode(to: encoder)
-        try RootVersionKeyVersionedDocumentSpecification(version: type(of: wrapped).version).encode(to: encoder)
+        try spec.init(withVersion: type(of: wrapped).version).encode(to: encoder)
     }
 }
 

@@ -31,6 +31,7 @@ struct SonnetV2: VersionedCodable {
 struct SonnetV1: VersionedCodable {
     static let version: Int? = 1
     typealias PreviousVersion = NothingEarlier
+    typealias VersionPathSpecification = VersionedSpec
     
     var author: String
     var body: Body
@@ -38,5 +39,15 @@ struct SonnetV1: VersionedCodable {
     struct Body: Codable {
         var quatrains: [[String]]
         var couplets: [[String]]
+    }
+    
+    struct VersionedSpec: VersionedDocumentSpecification {
+        static let versionKeyPath: KeyPath<SonnetV1.VersionedSpec, Int?> = \Self._version
+        
+        init(withVersion _version: Int? = nil) {
+            self._version = _version
+        }
+        
+        var _version: Int?
     }
 }
