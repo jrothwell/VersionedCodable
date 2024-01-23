@@ -47,7 +47,8 @@ struct VersionedCodableWritingWrapper: Encodable {
     var spec: any VersionedDocumentSpecification.Type
     
     func encode(to encoder: Encoder) throws {
-        guard !wrapped.hasFieldNamedVersion else {
+        
+        guard !wrapped.hasFieldWithSameNameAsVersionKeyPath else {
             throw VersionedEncodingError.typeHasClashingVersionField
         }
         
@@ -60,7 +61,7 @@ private extension VersionedCodable {
     // This can lead to a clash, or one `version` field being overwritten by the
     // other. We consider this to be a programmer error.
     // TODO: Find a way to stop this happening at compile time without introducing a bunch of boilerplate.
-    var hasFieldNamedVersion: Bool {
+    var hasFieldWithSameNameAsVersionKeyPath: Bool {
         Mirror(reflecting: self)
             .children
             .contains(where: { $0.label == "version" })

@@ -65,3 +65,30 @@ struct SonnetV1: VersionedCodable {
         var _version: Int?
     }
 }
+
+
+struct SonnetWithClash: VersionedCodable {
+    static let version: Int? = 1
+    typealias PreviousVersion = NothingEarlier
+    typealias VersionPathSpecification = VersionPath
+    
+    let metadata: Metadata
+    
+    struct Metadata: Codable {
+        var version: String
+    }
+    
+    struct VersionPath: VersionedDocumentSpecification {
+        static let versionKeyPath: KeyPath<SonnetWithClash.VersionPath, Int?> = \Self.metadata.version
+        
+        let metadata: Metadata
+        
+        init(withVersion version: Int?) {
+            self.metadata = Metadata(version: version)
+        }
+        
+        struct Metadata: Codable {
+            var version: Int?
+        }
+    }
+}

@@ -29,4 +29,18 @@ final class UnusualVersionKeyPathsTests: XCTestCase {
     }
 
 
+    func testExplodesWhenEncodingTypeWithClashingVersionField() throws {
+        let clashingSonnet = SonnetWithClash(metadata: .init(version: "First Version"))
+        
+        XCTAssertThrowsError(try JSONEncoder().encode(versioned: clashingSonnet)) { error in
+            switch error {
+            case VersionedEncodingError.typeHasClashingVersionField:
+                // ok
+                break
+            default:
+                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedEncodingError.typeHasClashingVersionField`, got: \(error)")
+            }
+        }
+    }
+
 }
