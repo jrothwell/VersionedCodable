@@ -19,5 +19,14 @@ final class UnusualVersionKeyPathsTests: XCTestCase {
         let decoded = try JSONDecoder().decode(versioned: SonnetV1.self, from: data)
         XCTAssertEqual("William Shakespeare", decoded.author)
     }
+    
+    func testFieldWithMoreComplexPath() throws {
+        let data = try Data(
+            contentsOf: Bundle.module.url(forResource: "sonnet-v2",
+                                          withExtension: "json")!)
+        let decoded = try JSONDecoder().decode(versioned: SonnetV2.self, from: data)
+        XCTAssertEqual("William Shakespeare", decoded.author)
+    }
+
 
 }

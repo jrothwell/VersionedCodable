@@ -11,6 +11,7 @@ import VersionedCodable
 struct SonnetV2: VersionedCodable {
     static let version: Int? = 2
     typealias PreviousVersion = SonnetV1
+    typealias VersionPathSpecification = VersionedSpec
     
     var author: String
     var body: [BodyElement]
@@ -26,6 +27,19 @@ struct SonnetV2: VersionedCodable {
         old.body.couplets.map { BodyElement.couplet($0) }
     }
 
+    struct VersionedSpec: VersionedDocumentSpecification {
+        static let versionKeyPath: KeyPath<SonnetV2.VersionedSpec, Int?> = \Self.metadata.documentVersion
+        
+        init(withVersion version: Int?) {
+            self.metadata = Metadata(documentVersion: version)
+        }
+        
+        var metadata: Metadata
+        
+        struct Metadata: Codable {
+            var documentVersion: Int?
+        }
+    }
 }
 
 struct SonnetV1: VersionedCodable {
