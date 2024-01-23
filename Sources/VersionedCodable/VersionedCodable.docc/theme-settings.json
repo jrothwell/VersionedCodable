@@ -1,0 +1,10 @@
+{
+  "theme": {
+    "color": {
+      "documentation-intro-fill": "#40826d"
+    }
+  },
+  "meta": {
+    "title": "VersionedCodable Documentation",
+  }
+}
