@@ -19,5 +19,10 @@ public enum VersionedEncodingError: Error {
     /// `version` field in your document yourself.
     /// - Tip: If you absolutely **must** encode an old version of your type (e.g. for compatibility reasons),
     ///   encode that type directly. Don't try to manually set the contents of the `version` field.
+    @available(*, deprecated, message:
+                    """
+                    Not possible in VersionedCodable v1.1 or above.
+                    It is your responsibility as the programmer to not have a field whose name and path clashes with your version field.
+                    """)
     case typeHasClashingVersionField
 }

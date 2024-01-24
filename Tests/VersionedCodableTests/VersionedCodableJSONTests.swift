@@ -105,21 +105,5 @@ final class VersionedCodableJSONTests: XCTestCase {
         XCTAssertEqual(["An epicure dining at Crewe", "Found a rather large mouse in his stew", "Cried the waiter: Don\'t shout", "And wave it about", "Or the rest will be wanting one too!"], encodedAndDecodedDocument.lines)
         XCTAssertEqual("A Clever Man", encodedAndDecodedDocument.author?.name)
     }
-    
-    func testExplodesWhenEncodingTypeWithClashingVersionField() throws {
-        let clashingPoem = PoemWithClash(
-            content: "Though the great Waters sleep",
-            version: 2)
-        
-        XCTAssertThrowsError(try JSONEncoder().encode(versioned: clashingPoem)) { error in
-            switch error {
-            case VersionedEncodingError.typeHasClashingVersionField:
-                // ok
-                break
-            default:
-                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedEncodingError.typeHasClashingVersionField`, got: \(error)")
-            }
-        }
-    }
 
 }
