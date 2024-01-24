@@ -30,6 +30,8 @@ let package = Package(
                 .copy("Support/expectedEncoded.plist"),
                 .copy("Support/expectedOlder.plist"),
                 .copy("Support/expectedUnsupported.plist"),
+                .copy("Support/UnusualKeyPaths/sonnet-v1.json"),
+                .copy("Support/UnusualKeyPaths/sonnet-v2.json")
             ]),
     ]
 )

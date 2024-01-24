@@ -10,11 +10,11 @@ import Foundation
 /// You can also implement support in other decoders using ``encodeTransparently(using:)`` and ``decodeTransparently(from:using:)``.
 ///
 /// ## Decoding
-/// If ``version`` matches the `version` field on the encoded type (also an optional `Int`),
+/// If the ``version`` field matches the version field on the encoded type (also an optional `Int`),
 /// this type will be the one that is decoded from the rest of the document.
 ///
 /// ## Encoding
-/// Upon encoding, the type will be encoded as normal and then an additional `version` field will be
+/// Upon encoding, the type will be encoded as normal and then an additional version field will be
 /// encoded with the contents of ``version``.
 ///
 /// - Note: ``version`` is optional, to account for versions of the type that were created and encoded
@@ -33,36 +33,23 @@ public protocol VersionedCodable: Codable {
     ///   signals the decoder to throw an error if it can't get a match for this version.
     associatedtype PreviousVersion: VersionedCodable
     
+    /// The ``VersionSpec`` used to determine how to encode and decode the version number of this
+    /// type.
+    associatedtype VersionSpec: VersionPathSpec = VersionKeyAtRootVersionPathSpec
+    
     /// Initializes a new instance of this type from a type of ``PreviousVersion``. This is where to do
     /// mapping between the old and new version of the type.
     /// - Note: You don't need to provide this if ``PreviousVersion`` is ``NothingEarlier``.
     init(from: PreviousVersion) throws
 }
 
-struct VersionedDocument: Codable {
-    var version: Int?
-}
 
 struct VersionedCodableWritingWrapper: Encodable {
     var wrapped: any VersionedCodable
+    var spec: any VersionPathSpec.Type
     
     func encode(to encoder: Encoder) throws {
-        guard !wrapped.hasFieldNamedVersion else {
-            throw VersionedEncodingError.typeHasClashingVersionField
-        }
-        
         try wrapped.encode(to: encoder)
-        try VersionedDocument(version: type(of: wrapped).version).encode(to: encoder)
-    }
-}
-
-private extension VersionedCodable {
-    // This can lead to a clash, or one `version` field being overwritten by the
-    // other. We consider this to be a programmer error.
-    // TODO: Find a way to stop this happening at compile time without introducing a bunch of boilerplate.
-    var hasFieldNamedVersion: Bool {
-        Mirror(reflecting: self)
-            .children
-            .contains(where: { $0.label == "version" })
+        try spec.init(withVersion: type(of: wrapped).version).encode(to: encoder)
     }
 }
