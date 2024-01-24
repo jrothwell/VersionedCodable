@@ -20,6 +20,6 @@ extension VersionedCodable {
     ///   ``VersionedCodable`` and thus supply a ``VersionedCodable/version`` value.
     /// - Returns: `self`, encoded by the `encode` parameter.
     public func encodeTransparently(using encode: (Encodable) throws -> Data) rethrows -> Data {
-        try encode(VersionedCodableWritingWrapper(wrapped: self, spec: VersionPathSpecification.self))
+        try encode(VersionedCodableWritingWrapper(wrapped: self, spec: VersionSpec.self))
     }
 }

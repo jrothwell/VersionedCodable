@@ -28,6 +28,11 @@ The version number is transparent at the point of use. You don't need to worry a
 - <doc:GettingStarted>
 - ``VersionedCodable/VersionedCodable``
 
+### Handling unusual locations for version fields
+- ``VersionPathSpec``
+- ``VersionKeyAtRootVersionPathSpec``
+- ``VersionedCodable/VersionedCodable/VersionSpec``
+
 ### Handling Errors
 - ``VersionedEncodingError``
 - ``VersionedDecodingError``

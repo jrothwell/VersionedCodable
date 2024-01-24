@@ -11,7 +11,7 @@ import VersionedCodable
 struct SonnetV2: VersionedCodable {
     static let version: Int? = 2
     typealias PreviousVersion = SonnetV1
-    typealias VersionPathSpecification = VersionedSpec
+    typealias VersionSpec = VersionedSpec
     
     var author: String
     var body: [BodyElement]
@@ -27,8 +27,8 @@ struct SonnetV2: VersionedCodable {
         old.body.couplets.map { BodyElement.couplet($0) }
     }
 
-    struct VersionedSpec: VersionedDocumentSpecification {
-        static let versionKeyPath: KeyPath<SonnetV2.VersionedSpec, Int?> = \Self.metadata.documentVersion
+    struct VersionedSpec: VersionPathSpec {
+        static let keyPathToVersion: KeyPath<SonnetV2.VersionedSpec, Int?> = \Self.metadata.documentVersion
         
         init(withVersion version: Int?) {
             self.metadata = Metadata(documentVersion: version)
@@ -45,7 +45,7 @@ struct SonnetV2: VersionedCodable {
 struct SonnetV1: VersionedCodable {
     static let version: Int? = 1
     typealias PreviousVersion = NothingEarlier
-    typealias VersionPathSpecification = VersionedSpec
+    typealias VersionSpec = VersionedSpec
     
     var author: String
     var body: Body
@@ -55,8 +55,8 @@ struct SonnetV1: VersionedCodable {
         var couplets: [[String]]
     }
     
-    struct VersionedSpec: VersionedDocumentSpecification {
-        static let versionKeyPath: KeyPath<SonnetV1.VersionedSpec, Int?> = \Self._version
+    struct VersionedSpec: VersionPathSpec {
+        static let keyPathToVersion: KeyPath<SonnetV1.VersionedSpec, Int?> = \Self._version
         
         init(withVersion _version: Int? = nil) {
             self._version = _version
@@ -70,7 +70,7 @@ struct SonnetV1: VersionedCodable {
 struct SonnetWithClash: VersionedCodable {
     static let version: Int? = 1
     typealias PreviousVersion = NothingEarlier
-    typealias VersionPathSpecification = VersionPath
+    typealias VersionSpec = VersionPath
     
     let metadata: Metadata
     
@@ -78,8 +78,8 @@ struct SonnetWithClash: VersionedCodable {
         var version: String
     }
     
-    struct VersionPath: VersionedDocumentSpecification {
-        static let versionKeyPath: KeyPath<SonnetWithClash.VersionPath, Int?> = \Self.metadata.version
+    struct VersionPath: VersionPathSpec {
+        static let keyPathToVersion: KeyPath<SonnetWithClash.VersionPath, Int?> = \Self.metadata.version
         
         let metadata: Metadata
         
