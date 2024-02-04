@@ -10,7 +10,7 @@ Migrations happen on a step-by-step basis. That is, older versions of the type g
 
 ![Three type definitions next to each other: Poem, PoemV1, and PoemPreV1. Poem has a `static let version = 2` and has a reference to PoemV1 as its `PreviousVersion`. PoemV1's version is 1 and its PreviousVersion is PoemPreV1, whose version is nil. There's also an initializer that allows a PoemV1 to be initialized from a PoemPreV1, and a PoemV2 from a `PoemV1`.](VersionedCodable.png)
 
-* When you encode a ``VersionedCodable/VersionedCodable`` type using the extensions on the `Foundation` encoders or using ``VersionedCodable/VersionedCodable/encodeTransparently(using:)``, it encodes an additional `version` key as a sibling to the other keys. This matches the value of ``VersionedCodable/VersionedCodable/version``.
+* When you encode a ``VersionedCodable/VersionedCodable`` type using the extensions on the `Foundation` encoders or using ``VersionedCodable/VersionedCodable/encodeTransparently(using:)``, it encodes an additional `version` key (by default, at the root of the type as a sibling to the other keys.) This matches the value of ``VersionedCodable/VersionedCodable/version``.
 * When you decode a type in the using the extensions on the `Foundation` decoders or using ``VersionedCodable/VersionedCodable/decodeTransparently(from:using:)``, it checks to see if the ``VersionedCodable/VersionedCodable/version`` property of the type matches the `version` field in the data it wants to decode.
    * **If it matches,** then it decodes the type in the usual way.
    * **If it doesn't match, it then checks ``VersionedCodable/VersionedCodable/PreviousVersion``.** If the previous type's ``VersionedCodable/VersionedCodable/version`` matches the `version` key of the data, it decodes it, and then converts this into the current type using the initializer you provide as part of ``VersionedCodable/VersionedCodable`` conformance.
@@ -22,6 +22,7 @@ You make your type versioned by making it conform to ``VersionedCodable/Versione
 - The current version number of the type (``VersionedCodable/VersionedCodable/version``.) This may be `nil`, to account for cases where you need to decode examples from before you adopted ``VersionedCodable``.
 - What the type of the *previous* version is (``VersionedCodable/PreviousVersion``.) If you're using the oldest version, you set this to ``NothingEarlier``.
 - An initializer for the current type which accepts the previous version of the type.
+- *(optionally)* a specification for where to encode and decode the version key (``VersionedCodable/VersionedCodable/VersionSpec``.) By default, it assumes you have a `version` key at the root of the type. If necessary, you customise this behaviour by providing your own implementation of ``VersionPathSpec``.
 
 Consider a `Poem` type which we want to change, which currently looks like this:
 
@@ -112,7 +113,15 @@ extension Poem: VersionedCodable {
 }
 ```
 
-- Tip: It is a very good idea to write acceptance tests that test you can decode old versions of your types. ``VersionedCodable/VersionedCodable`` provides the types and logic to make this kind of migration easy, **but** you still need to think carefully about how you map fields between different versions of your types. A comprehensive set of test cases will give you confidence that you can still decode earlier versions of documents, **and** that what comes out of them is what you expect.
+## About testing
+
+It's a very good idea to write acceptance tests that test you can decode old versions of your types. ``VersionedCodable/VersionedCodable`` provides the types and logic to make this kind of migration easy, **but** you still need to think carefully about how you map fields between different versions of your types.
+
+A comprehensive set of test cases will give you confidence that:
+- you can still decode earlier versions of documents
+- what comes out of them is what you expect.
+
+- Tip: Although we haven't used it in this example, this kind of encoding and decoding logic is a great candidate for test driven development.
 
 ## Decoding a versioned type
 ``VersionedCodable`` provides extensions to Foundation's built-in `JSONDecoder` and `PropertyListDecoder` types to allow you decode these out of the box, like this:
@@ -120,6 +129,18 @@ extension Poem: VersionedCodable {
 ```swift
 let poem = try JSONDecoder().decode(versioned: Poem.self, from: oldPoem)
 ```
+
+## Encoding a versioned type
+
+When encoding, the version key is encoded **after** the other keys in the `Encodable`.
+
+```swift
+let data = try JSONEncoder().encode(versioned: poem)
+```
+
+- Warning: ``VersionedCodable`` can't guarantee at compile or run time that there isn't a clashing `version` field on the type you're encoding. It is your responsibility to make sure there is no clash. Don't try to set the version number of an instance manually.
+
+## Decoding and encoding things other than JSON and property lists
 
 For other kinds of encoders and decoders you need to do a little more work, but not much. Define an extension on your decoder type to use ``VersionedCodable``'s logic to determine which type to decode:
 
@@ -135,15 +156,7 @@ extension MagneticTapeDecoder {
 }
 ```
 
-## Encoding a versioned type
-
-When encoding, the version is always encoded as `version` at the top level. It is encoded **after** the other keys in the `Encodable`.
-
-```swift
-let data = try JSONEncoder().encode(versioned: poem)
-```
-
-For encoders and decoders that aren't the built-in `JSONEncoder` and `PropertyListDecoder`, you need to define this extension:
+And for the encoder, you need to define this extension:
 
 ```swift
 extension MagneticTapeEncoder {
@@ -153,4 +166,4 @@ extension MagneticTapeEncoder {
 }
 ```
 
-(Internally this uses your encoding function to encode a wrapper type, which encodes all the keys of your contained type followed by a `version` key. But you don't need to create this yourself.)
+Internally this uses your encoding function to encode a wrapper type, which encodes all the keys of your contained type followed by the `version` key. But you don't need to define this logic yourself.

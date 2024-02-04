@@ -28,7 +28,7 @@ If this behaviour is not acceptable, you can implement ``VersionPathSpec`` to cu
 
 ### Testing
 
-It's' a very good idea to write acceptance tests that test you can decode old versions of your types.
+It's a very good idea to write acceptance tests for decoding old versions of your types.
 
 ``VersionedCodable/VersionedCodable`` provides the types and logic to make this kind of migration easy, **but** you still need to think carefully about how you map fields between different versions of your types.
 
