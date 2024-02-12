@@ -45,7 +45,7 @@ A comprehensive set of test cases will give you confidence that:
 - <doc:GettingStarted>
 - ``VersionedCodable/VersionedCodable``
 
-### Handling unusual locations for version fields
+### Version field specifications
 - ``VersionPathSpec``
 - ``VersionKeyAtRootVersionPathSpec``
 - ``VersionedCodable/VersionedCodable/VersionSpec``
