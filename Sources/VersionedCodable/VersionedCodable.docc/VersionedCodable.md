@@ -26,6 +26,10 @@ By default, it encodes a version number for the type as a sibling to the other f
 
 If this behaviour is not acceptable, you can implement ``VersionPathSpec`` to customise where the version number is encoded and decoded.
 
+Version numbers are always of type `Int?`. You can adopt `VersionedCodable` in a situation where you already have existing saved or encoded types by setting ``VersionedCodable/VersionedCodable/version`` to `nil`.
+
+- Note: Other `Comparable` types are not supported, including semantic versions. This is because there is no way to guarantee no breaking changes in minor or patch versions, and therefore no way to guarantee an exhaustive migration path.
+
 ### Testing
 
 It's a very good idea to write acceptance tests for decoding old versions of your types.
