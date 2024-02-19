@@ -7,11 +7,11 @@
 
 import Foundation
 
-/// The type to set as  `PreviousVersion` for a `VersionedDecodable` type which does **not**
+/// The type to set as  `PreviousVersion` for a ``VersionedCodable`` type which does **not**
 /// have any older versions.
 ///
-/// - Warning: Don't initialize, decode, or encode this type. It's just here to make the compiler work. The
-///   behaviour on initialization, decoding, and encoding is undefined.
+/// - Warning: Don't decode or encode this type. It's just here to make the compiler work. The
+///   behaviour on decoding and encoding is undefined and may result in a crash.
 public enum NothingEarlier {}
 
 extension VersionedCodable where PreviousVersion == NothingEarlier {
