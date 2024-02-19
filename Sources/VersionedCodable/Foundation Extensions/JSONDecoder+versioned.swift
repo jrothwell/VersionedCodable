@@ -13,7 +13,7 @@ extension JSONDecoder {
     ///
     /// - Parameters:
     ///   - expectedType: The type of the value to decode from the supplied JSON object—
-    ///     which may be an older version.
+    ///     which may be an older version. Must conform to ``VersionedCodable/VersionedCodable``.
     ///   - data: The JSON object to decode.
     /// - Returns: A value of the specified type, if the decoder can parse the data.
     public func decode<ExpectedType: VersionedCodable>(
