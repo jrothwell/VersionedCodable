@@ -1,8 +1,10 @@
 # VersionedCodable ![main workflow](https://github.com/jrothwell/VersionedCodable/actions/workflows/swift.yml/badge.svg) [![Swift version compatibility](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fjrothwell%2FVersionedCodable%2Fbadge%3Ftype%3Dswift-versions)](https://swiftpackageindex.com/jrothwell/VersionedCodable) [![Swift platform compatibility](https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fjrothwell%2FVersionedCodable%2Fbadge%3Ftype%3Dplatforms)](https://swiftpackageindex.com/jrothwell/VersionedCodable)
 
-A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and facilitates incremental migrations from older versions. This handles a specific case where you want to be able to change the structure of a type, while retaining the ability to decode older versions of it and reason about what has changed with each version.
+A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and facilitates incremental migrations from older versions. This handles a specific case where you want to be able to change the structure of a type, while retaining the ability to decode older versions of it.
 
-Migrations happen on a step-by-step basis. That is, older versions of the type get decoded using their original decoding logic, then get transformed into successively newer types until we reach the target type. (e.g. if we have a v1 document and we want a v3 type, we decode using the v1 type, then transform to v2, then to v3.)
+You make your types versioned by making them conform to ``VersionedCodable/VersionedCodable``. Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduces the maintenance burden of making potentially breaking changes to your types.
+
+This is especially useful for document types where things regularly get added, refactored, and moved around.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/jrothwell/VersionedCodable/main/Sources/VersionedCodable/VersionedCodable.docc/Resources/VersionedCodable%7Edark%402x.png">
@@ -21,14 +23,18 @@ You can encode and decode using extensions for `Foundation`'s built-in JSON and 
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/jrothwell/VersionedCodable.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/jrothwell/VersionedCodable.git", .upToNextMajor(from: "1.1.0"))
 ],
 ```
 
 **Or open your project in Xcode,** pick "Package Dependencies," click "Add," and enter the URL for this repository. 
 
 ## Problem statement
-`VersionedCodable` deals with a very specific use case where there is a `version` key in the encoded object, and it is a sibling of other keys in the object. For example, this:
+For `Codable` types that change over time where you might need to continue to decode data in the old format, `VersionedCodable` allows you to make changes in a way where you can rationalise migrations.
+
+Migrations happen on a step-by-step basis. That is, older versions of the type get decoded using their original decoding logic, then get transformed into successively newer types until we reach the target type.
+
+For instance, say you've just finished refactoring your `Poem` type, which would now encode to this:
 
 ```json
 {
@@ -154,10 +160,10 @@ This is mainly intended for situations where you are encoding and decoding compl
 Not really. [SwiftData](https://developer.apple.com/xcode/swiftdata/), new in iOS/iPadOS/tvOS 17, macOS 14, watchOS 10, and visionOS, is a Swifty interface over [Core Data](https://developer.apple.com/documentation/coredata). It does support schema versioning and has a number of ways to configure how you want your data persisted. It even works with `DocumentGroup`.
 
 However, there are a few limitations to consider:
-* `@Model` types have to be classes.
-* `SwiftData` is part of the OS, and **not** part of Swift's standard library like `Codable` is. If you're intending to target non-Apple platforms or OS versions earlier than the ones that'll be released this year, you may find your code doesn't compile if it references `SwiftData`.
+* `@Model` types have to be classes. This may not be appropriate if you want to use value types.
+* `SwiftData` is part of the OS, and **not** part of Swift's standard library like `Codable` is. If you're intending to target non-Apple platforms, or OS versions earlier than the ones released in 2023, you'll find your code doesn't compile if it references `SwiftData`.
 
-SwiftData is relatively new and has only recently been announced. As I learn more about it, I will be able to provide more insights about where its strengths lie. I encourage you to experiment and find the solution that works for you as well. But my current advice is:
+I encourage you to experiment and find the solution that works for you as well. But my current advice is:
 
 * If you need a very lightweight way of versioning your `Codable` types and will handle persistence yourself, or if you need to version value types (`struct`s instead of `class`es)---consider `VersionedCodable`.
 * If you're creating very complex types that have relations between them, and you don't need to worry about OS versions other than the newest Apple platforms as of this coming September/October time---consider `SwiftData`.
@@ -173,5 +179,5 @@ As a full-time engineer for whom `VersionedCodable` is a side project, I am not 
 ## Still Missing - Wish List
 
 - [ ] Swift 5.9 Macros support to significantly reduce boilerplate
-- [ ] Allow different keypaths to the version field
+- [X] Allow different keypaths to the version field - **Implemented in version 1.1!**
 - [ ] ~~(?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`. It would also run the risk that backported releases to older versions would have no automatic migration path.)~~ Won't do because it increases the risk of diverging document versions with no guaranteed migration path when maintaining older versions of the system.
