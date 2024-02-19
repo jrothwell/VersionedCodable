@@ -161,7 +161,7 @@ Not really. [SwiftData](https://developer.apple.com/xcode/swiftdata/), new in iO
 
 However, there are a few limitations to consider:
 * `@Model` types have to be classes. This may not be appropriate if you want to use value types.
-* `SwiftData` is part of the OS, and **not** part of Swift's standard library like `Codable` is. If you're intending to target non-Apple platforms, or OS versions earlier than the ones release in 2023, you'll find your code doesn't compile if it references `SwiftData`.
+* `SwiftData` is part of the OS, and **not** part of Swift's standard library like `Codable` is. If you're intending to target non-Apple platforms, or OS versions earlier than the ones released in 2023, you'll find your code doesn't compile if it references `SwiftData`.
 
 I encourage you to experiment and find the solution that works for you as well. But my current advice is:
 
