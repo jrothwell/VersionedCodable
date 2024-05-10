@@ -2,7 +2,7 @@
 
 A wrapper around Swift's [`Codable`](https://developer.apple.com/documentation/swift/codable) that allows you to version your `Codable` type, and facilitates incremental migrations from older versions. This handles a specific case where you want to be able to change the structure of a type, while retaining the ability to decode older versions of it.
 
-You make your types versioned by making them conform to ``VersionedCodable/VersionedCodable``. Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduces the maintenance burden of making potentially breaking changes to your types.
+You make your types versioned by making them conform to ``VersionedCodable``. Migrations take place on a step-by-step basis (i.e. v1 to v2 to v3) which reduces the maintenance burden of making potentially breaking changes to your types.
 
 This is especially useful for document types where things regularly get added, refactored, and moved around.
 
@@ -13,11 +13,15 @@ This is especially useful for document types where things regularly get added, r
 </picture>
 
 
-You can encode and decode using extensions for `Foundation`'s built-in JSON and property list encoders/decoders. It's also easy to add support to other encoders and decoders.
+You can encode and decode using extensions for `Foundation`'s built-in JSON and property list encoders/decoders. It's also easy to add support to other encoders and decoders. By default, the version key is encoded as a sibling to other keys in the `VersionedCodable` type: you can also specify your own version path if you need to.
 
 ## Quick Start
 
-**You will need:** Swift 5.7.1 or later.
+### You will need
+* A functioning computer.
+* Swift 5.7.1 or later.
+
+### What to do
 
 **In a Swift package:** Add this line to your `Package.swift` file's dependencies section...
 
@@ -27,7 +31,9 @@ dependencies: [
 ],
 ```
 
-**Or open your project in Xcode,** pick "Package Dependencies," click "Add," and enter the URL for this repository. 
+**Or: open your project in Xcode,** pick "Package Dependencies," click "Add," and enter the URL for this repository.
+
+You should read the [documentation for `VersionedCodable`, available on the Web here](https://jrothwell.github.io/VersionedCodable/documentation/versionedcodable/). If you use Xcode, it should also show up in the documentation browser.
 
 ## Problem statement
 For `Codable` types that change over time where you might need to continue to decode data in the old format, `VersionedCodable` allows you to make changes in a way where you can rationalise migrations.
@@ -166,18 +172,19 @@ However, there are a few limitations to consider:
 I encourage you to experiment and find the solution that works for you as well. But my current advice is:
 
 * If you need a very lightweight way of versioning your `Codable` types and will handle persistence yourself, or if you need to version value types (`struct`s instead of `class`es)---consider `VersionedCodable`.
-* If you're creating very complex types that have relations between them, and you don't need to worry about OS versions other than the newest Apple platforms as of this coming September/October time---consider `SwiftData`.
+* If you're creating very complex types that have relations between them, and you're only targeting Apple platforms including and after the 2023 major versions---consider `SwiftData`.
 
 ### Is there a version for Kotlin/Java/Android?
-**No.** `VersionedCodable` is an open-source part of [Unspool](https://unspool.app), a photo tagging app for MacOS which will not have an Android version for the foreseeable future. I don't see why it *wouldn't* be feasible to do something similar in Kotlin, but I would caution that `VersionedCodable` relies heavily on Swift having a built-in encoding/decoding mechanism and an expressive type system. The JVM may make it difficult to achieve the same behaviour in the same way.
+**No.** `VersionedCodable` is an open-source part of [Unspool](https://unspool.app), a photo tagging app for macOS which will not have an Android version for the foreseeable future. I don't see why it *wouldn't* be feasible to do something similar in Kotlin, but be warned that `VersionedCodable` relies heavily on Swift having a built-in encoding/decoding mechanism and an expressive type system. The JVM may make it difficult to achieve the same behaviour in a similarly expressive way.
 
 ### We want to use this in our financial/medical/regulated app but need guarantees about security, provenance, non-infringement, etc.
 Well, I must tell you that [under the terms of the MIT licence](LICENSE.md), `VersionedCodable` 'is provided "AS IS", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement,' and 'in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.'
 
-As a full-time engineer for whom `VersionedCodable` is a side project, I am not in a position to spend any time providing support, fulfilling adopters' regulatory or traceability requirements, or (e.g.) helping you compile your SBOM or SOUP list. You are, of course, welcome to fork it to create a "trusted version," or create your own solution inspired by it.
+As a full-time software engineer and architect for whom `VersionedCodable` is a side project, I am not in a position to spend any time providing support, fulfilling adopters' regulatory or traceability requirements, or (e.g.) helping you compile your SBOM or SOUP list. You are, of course, welcome to fork it to create a "trusted version," or create your own solution inspired by it.
 
 ## Still Missing - Wish List
 
-- [ ] Swift 5.9 Macros support to significantly reduce boilerplate
 - [X] Allow different keypaths to the version field - **Implemented in version 1.1!**
+- [ ] Some kind of type solution to prevent clashes between the version field and a field in the `VersionedCodable` type at compile time. Needs more research, may not be possible with the current Swift compiler.
+- [ ] Swift 5.9 Macros support to significantly reduce boilerplate - *likely to be a separate package, probably not necessary for most adopters*
 - [ ] ~~(?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`. It would also run the risk that backported releases to older versions would have no automatic migration path.)~~ Won't do because it increases the risk of diverging document versions with no guaranteed migration path when maintaining older versions of the system.
