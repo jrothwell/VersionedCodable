@@ -6,37 +6,42 @@
 //
 
 import XCTest
-import VersionedCodable
+import Testing
+@testable import VersionedCodable
 
-final class NothingEarlierConformanceConfidenceTests: XCTestCase {
+@Suite("NothingEarlier")
+struct NothingEarlierConformanceConfidenceTests {
     
     let blankData = "{}".data(using: .utf8)!
     
-    func testNothingEarlierVersionIsNil() throws {
-        XCTAssertNil(NothingEarlier.version)
+    @Test(
+        "has a version of `nil`",
+        .tags(.configuration)
+    ) func nothingEarlierVersionIsNil() throws {
+        #expect(NothingEarlier.version == nil)
     }
     
-    func testDecodingThrowsError() throws {
-        XCTAssertThrowsError(try JSONDecoder().decode(NothingEarlier.self, from: blankData)) { error in
-            switch error {
-            case VersionedDecodingError.unsupportedVersion(let currentVersion):
-                XCTAssertTrue(currentVersion == NothingEarlier.self)
-            default:
-                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.unsupportedVersion(tried:)`, got: \(error)")
-            }
-
+    @Test(
+        "throws if you try to decode anything into it",
+        .tags(.configuration)
+    ) func decodingNothingEarlierThrowsAnError() throws {
+        #expect(throws: VersionedDecodingError.unsupportedVersion(tried: NothingEarlier.self)) {
+            try JSONDecoder().decode(
+                NothingEarlier.self,
+                from: blankData
+            )
         }
-        
     }
     
-    func testDecodingFromSlightlyEarlierType() throws {
-        XCTAssertThrowsError(try JSONDecoder().decode(versioned: VersionedCodableWithoutOlderVersion.self, from: blankData)) { error in
-            switch error {
-            case VersionedDecodingError.unsupportedVersion(let currentVersion):
-                XCTAssertTrue(currentVersion == VersionedCodableWithoutOlderVersion.self)
-            default:
-                XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.unsupportedVersion(tried:)`, got: \(error)")
-            }
+    @Test(
+        "works properly as the 'stopper' type where there are no previous versions",
+        .tags(.behaviour)
+    ) func decodingFromSlightlyEarlierType() throws {
+        #expect(throws: VersionedDecodingError.unsupportedVersion(tried: VersionedCodableWithoutOlderVersion.self)) {
+            try JSONDecoder().decode(
+                versioned: VersionedCodableWithoutOlderVersion.self,
+                from: blankData
+            )
         }
     }
 }
@@ -47,4 +52,19 @@ struct VersionedCodableWithoutOlderVersion: VersionedCodable {
     typealias PreviousVersion = NothingEarlier
     
     var text: String
+}
+
+extension VersionedDecodingError: @retroactive Equatable {
+    public static func == (lhs: VersionedDecodingError, rhs: VersionedDecodingError) -> Bool {
+        switch (lhs, rhs) {
+        case let (.unsupportedVersion(leftVersion), .unsupportedVersion(rightVersion)):
+            leftVersion == rightVersion
+        case (.fieldNoLongerValid, .fieldNoLongerValid):
+            true
+        default:
+            false
+        }
+    }
+    
+    
 }
