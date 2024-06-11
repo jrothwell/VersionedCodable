@@ -9,21 +9,18 @@ import XCTest
 import Testing
 @testable import VersionedCodable
 
-@Suite("NothingEarlier")
-struct NothingEarlierConformanceConfidenceTests {
-    
-    let blankData = "{}".data(using: .utf8)!
-    
+let blankData = "{}".data(using: .utf8)!
+
+@Suite("NothingEarlier", .tags(.configuration))
+struct NothingEarlierConfigurationTests {
     @Test(
-        "has a version of `nil`",
-        .tags(.configuration)
+        "has a version of `nil`"
     ) func nothingEarlierVersionIsNil() throws {
         #expect(NothingEarlier.version == nil)
     }
     
     @Test(
-        "throws if you try to decode anything into it",
-        .tags(.configuration)
+        "throws if you try to decode anything into it"
     ) func decodingNothingEarlierThrowsAnError() throws {
         #expect(throws: VersionedDecodingError.unsupportedVersion(tried: NothingEarlier.self)) {
             try JSONDecoder().decode(
@@ -32,7 +29,10 @@ struct NothingEarlierConformanceConfidenceTests {
             )
         }
     }
-    
+}
+
+@Suite("NothingEarlier", .tags(.behaviour))
+struct NothingEarlierBehaviourTests {
     @Test(
         "works properly as the 'stopper' type where there are no previous versions",
         .tags(.behaviour)
