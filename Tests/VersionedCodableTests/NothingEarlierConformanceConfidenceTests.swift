@@ -9,21 +9,18 @@ import XCTest
 import Testing
 @testable import VersionedCodable
 
-@Suite("NothingEarlier")
-struct NothingEarlierConformanceConfidenceTests {
-    
-    let blankData = "{}".data(using: .utf8)!
-    
+let blankData = "{}".data(using: .utf8)!
+
+@Suite("NothingEarlier", .tags(.configuration))
+struct NothingEarlierConfigurationTests {
     @Test(
-        "has a version of `nil`",
-        .tags(.configuration)
+        "has a version of `nil`"
     ) func nothingEarlierVersionIsNil() throws {
         #expect(NothingEarlier.version == nil)
     }
     
     @Test(
-        "throws if you try to decode anything into it",
-        .tags(.configuration)
+        "throws if you try to decode anything into it"
     ) func decodingNothingEarlierThrowsAnError() throws {
         
         // TODO: 20/09/2024: The helper function is necessary due to some kind of issue with macro expansion. Remove this once the bug (in the compiler?) is resolved.
@@ -45,7 +42,10 @@ struct NothingEarlierConformanceConfidenceTests {
             return isTypeMismatchVsNothingEarlier(error: error)
         }
     }
-    
+}
+
+@Suite("NothingEarlier", .tags(.behaviour))
+struct NothingEarlierBehaviourTests {
     @Test(
         "works properly as the 'stopper' type where there are no previous versions",
         .tags(.behaviour)
