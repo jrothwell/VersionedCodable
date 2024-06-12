@@ -11,40 +11,47 @@ import Testing
 
 let blankData = "{}".data(using: .utf8)!
 
-@Suite("NothingEarlier", .tags(.configuration))
-struct NothingEarlierConfigurationTests {
-    @Test(
-        "has a version of `nil`"
-    ) func nothingEarlierVersionIsNil() throws {
-        #expect(NothingEarlier.version == nil)
+@Suite("NothingEarlier")
+struct NothingEarlierTests {
+    
+    @Suite("Configuration", .tags(.configuration))
+    struct ConfigurationTests {
+        @Test(
+            "has a version of `nil`"
+        ) func nothingEarlierVersionIsNil() throws {
+            #expect(NothingEarlier.version == nil)
+        }
+        
+        @Test(
+            "throws if you try to decode anything into it"
+        ) func decodingNothingEarlierThrowsAnError() throws {
+            #expect(throws: VersionedDecodingError.unsupportedVersion(tried: NothingEarlier.self)) {
+                try JSONDecoder().decode(
+                    NothingEarlier.self,
+                    from: blankData
+                )
+            }
+        }
+
     }
     
-    @Test(
-        "throws if you try to decode anything into it"
-    ) func decodingNothingEarlierThrowsAnError() throws {
-        #expect(throws: VersionedDecodingError.unsupportedVersion(tried: NothingEarlier.self)) {
-            try JSONDecoder().decode(
-                NothingEarlier.self,
-                from: blankData
-            )
+    @Suite("Behaviour", .tags(.behaviour))
+    struct BehaviourTests {
+        @Test(
+            "works properly as the 'stopper' type where there are no previous versions",
+            .tags(.behaviour)
+        ) func decodingFromSlightlyEarlierType() throws {
+            #expect(throws: VersionedDecodingError.unsupportedVersion(tried: VersionedCodableWithoutOlderVersion.self)) {
+                try JSONDecoder().decode(
+                    versioned: VersionedCodableWithoutOlderVersion.self,
+                    from: blankData
+                )
+            }
         }
     }
+
 }
 
-@Suite("NothingEarlier", .tags(.behaviour))
-struct NothingEarlierBehaviourTests {
-    @Test(
-        "works properly as the 'stopper' type where there are no previous versions",
-        .tags(.behaviour)
-    ) func decodingFromSlightlyEarlierType() throws {
-        #expect(throws: VersionedDecodingError.unsupportedVersion(tried: VersionedCodableWithoutOlderVersion.self)) {
-            try JSONDecoder().decode(
-                versioned: VersionedCodableWithoutOlderVersion.self,
-                from: blankData
-            )
-        }
-    }
-}
 
 struct VersionedCodableWithoutOlderVersion: VersionedCodable {
     static let version: Int? = 1
