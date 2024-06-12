@@ -11,53 +11,59 @@ import Testing
 
 let blankData = "{}".data(using: .utf8)!
 
-@Suite("NothingEarlier", .tags(.configuration))
-struct NothingEarlierConfigurationTests {
-    @Test(
-        "has a version of `nil`"
-    ) func nothingEarlierVersionIsNil() throws {
-        #expect(NothingEarlier.version == nil)
-    }
+@Suite("NothingEarlier")
+struct NothingEarlierTests {
     
-    @Test(
-        "throws if you try to decode anything into it"
-    ) func decodingNothingEarlierThrowsAnError() throws {
+    @Suite("Configuration", .tags(.configuration))
+    struct ConfigurationTests {
+        @Test(
+            "has a version of `nil`"
+        ) func nothingEarlierVersionIsNil() throws {
+            #expect(NothingEarlier.version == nil)
+        }
         
-        // TODO: 20/09/2024: The helper function is necessary due to some kind of issue with macro expansion. Remove this once the bug (in the compiler?) is resolved.
-        func isTypeMismatchVsNothingEarlier(error: Error) -> Bool {
-            switch error {
-            case DecodingError.typeMismatch(let type, _):
-                return type == NothingEarlier.self
-            default:
-                return false
+        @Test(
+            "throws if you try to decode anything into it"
+        ) func decodingNothingEarlierThrowsAnError() throws {
+            
+            // TODO: 20/09/2024: The helper function is necessary due to some kind of issue with macro expansion. Remove this once the bug (in the compiler?) is resolved.
+            func isTypeMismatchVsNothingEarlier(error: Error) -> Bool {
+                switch error {
+                case DecodingError.typeMismatch(let type, _):
+                    return type == NothingEarlier.self
+                default:
+                    return false
+                }
+            }
+            
+            #expect {
+                try JSONDecoder().decode(
+                    NothingEarlier.self,
+                    from: blankData
+                )
+            } throws: { error in
+                return isTypeMismatchVsNothingEarlier(error: error)
             }
         }
-        
-        #expect {
-            try JSONDecoder().decode(
-                NothingEarlier.self,
-                from: blankData
-            )
-        } throws: { error in
-            return isTypeMismatchVsNothingEarlier(error: error)
+    }
+    
+    @Suite("Behaviour", .tags(.behaviour))
+    struct BehaviourTests {
+        @Test(
+            "works properly as the 'stopper' type where there are no previous versions",
+            .tags(.behaviour)
+        ) func decodingFromSlightlyEarlierType() throws {
+            #expect(throws: VersionedDecodingError.unsupportedVersion(tried: VersionedCodableWithoutOlderVersion.self)) {
+                try JSONDecoder().decode(
+                    versioned: VersionedCodableWithoutOlderVersion.self,
+                    from: blankData
+                )
+            }
         }
     }
+
 }
 
-@Suite("NothingEarlier", .tags(.behaviour))
-struct NothingEarlierBehaviourTests {
-    @Test(
-        "works properly as the 'stopper' type where there are no previous versions",
-        .tags(.behaviour)
-    ) func decodingFromSlightlyEarlierType() throws {
-        #expect(throws: VersionedDecodingError.unsupportedVersion(tried: VersionedCodableWithoutOlderVersion.self)) {
-            try JSONDecoder().decode(
-                versioned: VersionedCodableWithoutOlderVersion.self,
-                from: blankData
-            )
-        }
-    }
-}
 
 struct VersionedCodableWithoutOlderVersion: VersionedCodable {
     static let version: Int? = 1
