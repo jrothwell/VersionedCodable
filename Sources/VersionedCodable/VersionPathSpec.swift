@@ -11,11 +11,10 @@ import Foundation
 public protocol VersionPathSpec: Codable {
     /// The key path to the version of this type. Used to find the version key during decoding.
     ///
-    /// - Warning: It is your responsibility to make sure this value does not change during decoding.
-    ///   Typically you achieve this by making the version key immutable (i.e. a `let` as opposed to a
-    ///   `var`.)
+    /// - Warning: It is your responsibility to guarantee this key path does not change during decoding.
+    ///   Typically you achieve this by making the value immutable (i.e. a `let` as opposed to a `var`.)
     // TODO: 11/06/2024 - Write a test to attempt to make this break concurrency in some way & then work around it.
-    static var keyPathToVersion: KeyPath<Self, Int?> { get }
+    nonisolated(unsafe) static var keyPathToVersion: KeyPath<Self, Int?> { get }
     
     /// Initializes the type with the provided version.
     /// - Parameter version: The version of the document being encoded.

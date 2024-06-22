@@ -28,7 +28,7 @@ struct SonnetV2: VersionedCodable {
     }
 
     struct VersionedSpec: VersionPathSpec {
-        nonisolated(unsafe) static let keyPathToVersion: KeyPath<SonnetV2.VersionedSpec, Int?> = \Self.metadata.documentVersion
+        static let keyPathToVersion: KeyPath<SonnetV2.VersionedSpec, Int?> = \Self.metadata.documentVersion
         
         init(withVersion version: Int?) {
             self.metadata = Metadata(documentVersion: version)
@@ -56,7 +56,7 @@ struct SonnetV1: VersionedCodable {
     }
     
     struct VersionedSpec: VersionPathSpec {
-        nonisolated(unsafe) static let keyPathToVersion: KeyPath<SonnetV1.VersionedSpec, Int?> = \Self._version
+        static let keyPathToVersion: KeyPath<SonnetV1.VersionedSpec, Int?> = \Self._version
         
         init(withVersion _version: Int? = nil) {
             self._version = _version
