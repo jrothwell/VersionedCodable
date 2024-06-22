@@ -7,11 +7,25 @@
 
 import Foundation
 
-/// The type to set as  `PreviousVersion` for a ``VersionedCodable`` type which does **not**
-/// have any older versions.
+/// The type to indicate that a ``VersionedCodable/VersionedCodable`` does **not** have any
+/// older versions, and the decoder should stop trying to decode it.
 ///
-/// - Warning: Don't decode or encode this type. It's just here to make the compiler work. The
-///   behaviour on decoding and encoding is undefined and may result in a crash.
+/// You typically use this when creating a new ``VersionedCodable/VersionedCodable`` type, or
+/// conforming an existing type to ``VersionedCodable/VersionedCodable``. Set it as the
+/// ``VersionedCodable/VersionedCodable/PreviousVersion`` of any type that has no previous
+/// version.
+///
+/// ## Discussion
+/// The behaviour of ``NothingEarlier``'s ``VersionedCodable`` conformances is similar to
+/// how `Never` conforms to `Codable`, as defined in [SE-0396](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0396-never-codable.md)
+/// and implemented in Swift 5.9. But generally you don't need to care about this—because you will never
+/// try to (or be able to) encode or decode a `NothingEarlier` type.
+///
+/// - SeeAlso: ``VersionedCodable/VersionedCodable/PreviousVersion``
+/// - Important: There's no way to create an instance of ``NothingEarlier``. It's an *uninhabited type*,
+///   similar to `Never` in the standard library.
+/// - Warning: Don't decode or initialize ``NothingEarlier``. The behaviour on decoding and
+///   encoding is undefined and may result in a crash.
 public enum NothingEarlier {}
 
 extension VersionedCodable where PreviousVersion == NothingEarlier {
@@ -30,16 +44,19 @@ extension NothingEarlier: VersionedCodable {
     public static let version: Int? = nil
     
     
-    /// - Warning: Do not invoke this initializer. The behaviour on initialization is undefined: in future it
-    ///   may result in an unrecoverable fatal error or assertion failure.
+    /// - Warning: Do not try to decode ``NothingEarlier``. The behvaiour if you do so is
+    ///   undefined. In future it may result in an unrecoverable fatal error or assertion failure.
     public init(from decoder: Decoder) throws {
-        throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
+        let context = DecodingError.Context(
+               codingPath: decoder.codingPath,
+               debugDescription: "Unable to decode an instance of NothingEarlier."
+        )
+        throw DecodingError.typeMismatch(NothingEarlier.self, context)
     }
         
-    /// - Warning: Do not try to encode this type. The behaviour on encoding is undefined: in future it
-    ///   may result in an unrecoverable fatal error or assertion failure.
-    public func encode(to encoder: Encoder) throws {
-        throw VersionedDecodingError.unsupportedVersion(tried: Self.self)
-    }
+    /// - Note: It is impossible to encode ``NothingEarlier`` because ``NothingEarlier`` is
+    ///   an uninhabited type, similar to `Never` in the Swift standard library---so you can never have
+    ///   an instance of ``NothingEarlier`` to encode.
+    public func encode(to encoder: Encoder) throws { }
 }
 
