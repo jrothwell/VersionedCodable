@@ -19,8 +19,8 @@ final class NothingEarlierConformanceConfidenceTests: XCTestCase {
     func testDecodingThrowsError() throws {
         XCTAssertThrowsError(try JSONDecoder().decode(NothingEarlier.self, from: blankData)) { error in
             switch error {
-            case VersionedDecodingError.unsupportedVersion(let currentVersion):
-                XCTAssertTrue(currentVersion == NothingEarlier.self)
+            case DecodingError.typeMismatch(let type, _):
+                XCTAssertTrue(type == NothingEarlier.self)
             default:
                 XCTFail("An error threw, but it was the wrong kind of error (expected `VersionedDecodingError.unsupportedVersion(tried:)`, got: \(error)")
             }
