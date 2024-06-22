@@ -11,7 +11,15 @@ import Foundation
 /// older versions, and the decoder should stop trying to decode it.
 ///
 /// You typically use this when creating a new ``VersionedCodable/VersionedCodable`` type, or
-/// conforming an existing type to ``VersionedCodable/VersionedCodable``.
+/// conforming an existing type to ``VersionedCodable/VersionedCodable``. Set it as the
+/// ``VersionedCodable/VersionedCodable/PreviousVersion`` of any type that has no previous
+/// version.
+///
+/// ## Discussion
+/// The behaviour of ``NothingEarlier``'s ``VersionedCodable`` conformances is similar to
+/// how `Never` conforms to `Codable`, as defined in [SE-0396](https://github.com/swiftlang/swift-evolution/blob/main/proposals/0396-never-codable.md)
+/// and implemented in Swift 5.9. But generally you don't need to care about this—because you will never
+/// try to (or be able to) encode or decode a `NothingEarlier` type.
 ///
 /// - SeeAlso: ``VersionedCodable/VersionedCodable/PreviousVersion``
 /// - Important: There's no way to create an instance of ``NothingEarlier``. It's an *uninhabited type*,
