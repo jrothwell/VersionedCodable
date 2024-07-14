@@ -4,9 +4,9 @@ Make a `Codable` type conform to ``VersionedCodable/VersionedCodable``, build a 
 
 ## Overview
 
-For `Codable` types that change over time where you might need to continue to decode data in the old format, ``VersionedCodable/VersionedCodable`` allows you to make changes in a way where you can rationalise migrations.
+Some `Codable` types might change over time, but you may still need to decode data in the old format. `VersionedCodable` allows you to retain older versions of the type and decode them as if they were the current version, using step-by-step migrations.
 
-Migrations happen on a step-by-step basis. That is, older versions of the type get decoded using their original decoding logic, then get transformed into successively newer types until we reach the target type.
+Older versions of the type get decoded using their original decoding logic. They then get transformed into successively newer types until the decoder reaches the target type.
 
 ![Three type definitions next to each other: Poem, PoemV1, and PoemPreV1. Poem has a `static let version = 2` and has a reference to PoemV1 as its `PreviousVersion`. PoemV1's version is 1 and its PreviousVersion is PoemPreV1, whose version is nil. There's also an initializer that allows a PoemV1 to be initialized from a PoemPreV1, and a PoemV2 from a `PoemV1`.](VersionedCodable.png)
 
@@ -56,7 +56,7 @@ You can now decode and encode the type using the versioned extensions to Foundat
 ### Creating a new version of the type
 Now let's say our product owner has decided that we don't want to use star ratings any more. Instead we want to have a love/hate/neutral field. If there are any star ratings outside the 0...5 range, that's now considered invalid, so trying to decode this will produce an error.
 
-Let's start by making a copy of our existing type, making it `private`, and putting it out of the way:
+Let's start by making a copy of our existing type, calling it `OldPoem`, making it `private`, and putting it out of the way:
 
 ```swift
 private struct OldPoem: VersionedCodable {
@@ -115,7 +115,7 @@ extension Poem: VersionedCodable {
 
 ## About testing
 
-It's a very good idea to write acceptance tests that test you can decode old versions of your types. ``VersionedCodable/VersionedCodable`` provides the types and logic to make this kind of migration easy, **but** you still need to think carefully about how you map fields between different versions of your types.
+It is a very good idea to write acceptance tests that decode old versions of your types. ``VersionedCodable/VersionedCodable`` provides the types and logic to make this kind of migration easy, **but** you still need to think carefully about how you map fields between different versions of your types. Type safety isn't a substitute for testing.
 
 A comprehensive set of test cases will give you confidence that:
 - you can still decode earlier versions of documents
@@ -138,7 +138,7 @@ When encoding, the version key is encoded **after** the other keys in the `Encod
 let data = try JSONEncoder().encode(versioned: poem)
 ```
 
-- Warning: ``VersionedCodable`` can't guarantee at compile or run time that there isn't a clashing `version` field on the type you're encoding. It is your responsibility to make sure there is no clash. Don't try to set the version number of an instance manually.
+- Warning: ``VersionedCodable`` can't guarantee at compile or run time that there isn't a clashing `version` field on the type you're encoding. It is your responsibility to make sure there is no clash. Don't try to set the version number of an instance manually. The behaviour is undefined if you do so.
 
 ## Decoding and encoding things other than JSON and property lists
 
