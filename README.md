@@ -13,7 +13,7 @@ This is especially useful for document types where things regularly get added, r
 </picture>
 
 
-You can encode and decode using extensions for `Foundation`'s built-in JSON and property list encoders/decoders. It's also easy to add support to other encoders and decoders. By default, the version key is encoded as a sibling to other keys in the `VersionedCodable` type: you can also specify your own version path if you need to.
+You can encode and decode using extensions for `Foundation`'s built-in JSON and property list encoders/decoders. It's also easy to add support to other encoders and decoders. By default, the version key is encoded in the root of the `VersionedCodable` type: you can also specify your own version path if you need to.
 
 ## Quick Start
 
@@ -33,40 +33,19 @@ dependencies: [
 
 **Or: open your project in Xcode,** pick "Package Dependencies," click "Add," and enter the URL for this repository.
 
-You should read the [documentation for `VersionedCodable`, available on the Web here](https://jrothwell.github.io/VersionedCodable/documentation/versionedcodable/). If you use Xcode, it should also show up in the documentation browser.
+Read the [documentation for `VersionedCodable`, available on the Web here](https://jrothwell.github.io/VersionedCodable/documentation/versionedcodable/). If you use Xcode, it will also appear in the documentation browser.
 
 ## Problem statement
-For `Codable` types that change over time where you might need to continue to decode data in the old format, `VersionedCodable` allows you to make changes in a way where you can rationalise migrations.
+Some `Codable` types might change over time, but you may still need to decode data in the old format. `VersionedCodable` allows you to retain older versions of the type and decode them as if they were the current version, using step-by-step migrations.
 
-Migrations happen on a step-by-step basis. That is, older versions of the type get decoded using their original decoding logic, then get transformed into successively newer types until we reach the target type.
+Older versions of the type get decoded using their original decoding logic. They then get transformed into successively newer types until the target type is reached.
 
-For instance, say you've just finished refactoring your `Poem` type, which would now encode to this:
+### Example
 
-```json
-{
-    "version": 3,
-    "author": "Anonymous",
-    "poem": "An epicure dining at Crewe\nFound a rather large mouse in his stew",
-    "rating": "love"
-}
-```
-
-
-However, you might still need to be able to handle documents in an older version of the format...
-
-```json
-{
-    "version": 2,
-    "author": "Anonymous",
-    "poem": "An epicure dining at Crewe\nFound a rather large mouse in his stew",
-    "starRating": 4
-}
-```
-
-...and ultimately, all you want is to be able to decode into your current type, which is this, so you can use it in your app:
+Say you've just finished refactoring your `Poem` type, which now looks like this:
 
 ```swift
-struct Poem {
+struct Poem: Codable {
     var author: String
     var poem: String
     var rating: Rating
@@ -77,16 +56,58 @@ struct Poem {
 }
 ```
 
+Encoded as JSON, this would look like:
+
+```json
+{
+    "version": 2,
+    "author": "Anonymous",
+    "poem": "An epicure dining at Crewe\nFound a rather large mouse in his stew",
+    "rating": "love"
+}
+```
+
+However, you might still need to be able to handle documents in an older version of the format, which look like this:
+
+```json
+{
+    "version": 1,
+    "author": "Anonymous",
+    "poem": "An epicure dining at Crewe\nFound a rather large mouse in his stew",
+    "starRating": 4
+}
+```
+
+The original type might look like this:
+
+```swift
+struct OldPoem: Codable {
+    var author: String
+    var poem: String
+    var starRating: Int
+}
+```
+
+To decode and use existing `OldPoem` JSONs, you follow the following steps:
+
+1. Make `OldPoem` conform to `VersionedCodable`. Set its `version` to 1, and its
+   `PreviousVersion` to `NothingEarlier`.
+2. Make `Poem` conform to `VersionedCodable`. Set its `version` to 2, and its
+   `PreviousVersion` to `OldPoem`.
+3. Define an initializer for `Poem` that accepts an `OldPoem`. Define how you'll
+   transform your older type into the newer type.
+4. In places where you decode JSON versions of `Poem`, update it to use the
+   `VersionedCodable` extensions to `Foundation`.
+
 ## How to use it
 
 You declare conformance to `VersionedCodable` like this:
 
 ```swift
 extension Poem: VersionedCodable {
-    // Specify the current version.
-    // This will be the contents of the `version` field when you encode this
-    // type. It also tells us on decoding that this type is capable of
-    // decoding itself from an input with `"version": 3`.
+    // Declare the current version.
+    // It tells us on decoding that this type is capable of decoding itself from
+    // an input with `"version": 3`. It also gets encoded with this version key.
     static let version: Int? = 3
     
     // The next oldest version of the `Poem` type.
@@ -136,6 +157,16 @@ extension PoemOldVersion: VersionedCodable {
 }
 ```
 
+## Testing
+
+**It is a very good idea to write acceptance tests that decode old versions of your types.** This will give you confidence that all your exisitng data still makes sense in your current data model, and that your migrations are doing the right thing.
+
+`VersionedCodable` provides the infrastructure to make these kinds of migrations easy, but you still need to think carefully about how you map fields between different versions of your types. Type safety isn't a substitute for testing.
+
+> [!TIP]
+> This kind of logic is a great candidate for test driven development, since you already know what a successful input and output looks like.
+
+
 ## Encoding and decoding
 `VersionedCodable` provides thin wrappers around Swift's default `encode(_:)` and `decode(_:from:)` functions for both the JSON and property list decoders.
 
@@ -152,9 +183,6 @@ let encoder = JSONEncoder()
 encoder.encode(versioned: myPoem) // where myPoem is of type `Poem` which conforms to `VersionedCodable`
 ```
 
-## Testing
-**It is a very good idea to write acceptance tests for decoding old versions of your types to act as a suite of confidence tests.** `VersionedCodable` provides the types to make this kind of migration easy, but you still need to think carefully about how you map fields between different versions of your types.
-
 ## Applications
 
 This is mainly intended for situations where you are encoding and decoding complex types such as documents that live in storage somewhere (on someone's device's storage, in a document database, etc.) and can't all be migrated at once. In these cases, the format often changes, and decoding logic can often become unwieldy.
@@ -169,13 +197,13 @@ However, there are a few limitations to consider:
 * `@Model` types have to be classes. This may not be appropriate if you want to use value types.
 * `SwiftData` is part of the OS, and **not** part of Swift's standard library like `Codable` is. If you're intending to target non-Apple platforms, or OS versions earlier than the ones released in 2023, you'll find your code doesn't compile if it references `SwiftData`.
 
-I encourage you to experiment and find the solution that works for you as well. But my current advice is:
+I encourage you to experiment and find the solution that works for you. But my current suggestion is:
 
 * If you need a very lightweight way of versioning your `Codable` types and will handle persistence yourself, or if you need to version value types (`struct`s instead of `class`es)---consider `VersionedCodable`.
 * If you're creating very complex types that have relations between them, and you're only targeting Apple platforms including and after the 2023 major versions---consider `SwiftData`.
 
 ### Is there a version for Kotlin/Java/Android?
-**No.** `VersionedCodable` is an open-source part of [Unspool](https://unspool.app), a photo tagging app for macOS which will not have an Android version for the foreseeable future. I don't see why it *wouldn't* be feasible to do something similar in Kotlin, but be warned that `VersionedCodable` relies heavily on Swift having a built-in encoding/decoding mechanism and an expressive type system. The JVM may make it difficult to achieve the same behaviour in a similarly expressive way.
+**No.** `VersionedCodable` is an open-source part of [Unspool](https://unspool.app), a photo tagging app for macOS which will not have an Android version for the foreseeable future. I don't see why it *wouldn't* be feasible to do something similar in Kotlin, but be warned that `VersionedCodable` relies heavily on Swift having a built-in encoding/decoding mechanism and an expressive type system. The JVM may make it difficult to achieve the same behaviour in a similarly safe and expressive way.
 
 ### We want to use this in our financial/medical/regulated app but need guarantees about security, provenance, non-infringement, etc.
 Well, I must tell you that [under the terms of the MIT licence](LICENSE.md), `VersionedCodable` 'is provided "AS IS", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement,' and 'in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.'
