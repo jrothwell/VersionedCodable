@@ -38,7 +38,7 @@ Read the [documentation for `VersionedCodable`, available on the Web here](https
 ## Problem statement
 Some `Codable` types might change over time, but you may still need to decode data in the old format. `VersionedCodable` allows you to retain older versions of the type and decode them as if they were the current version, using step-by-step migrations.
 
-Older versions of the type get decoded using their original decoding logic. They then get transformed into successively newer types until the target type is reached.
+Older versions of the type get decoded using their original decoding logic. They then get transformed into successively newer types until the decoder reaches the target type.
 
 ### Example
 
@@ -159,7 +159,7 @@ extension PoemOldVersion: VersionedCodable {
 
 ## Testing
 
-**It is a very good idea to write acceptance tests that decode old versions of your types.** This will give you confidence that all your exisitng data still makes sense in your current data model, and that your migrations are doing the right thing.
+**It is a very good idea to write acceptance tests that decode old versions of your types.** This will give you confidence that all your existing data still makes sense in your current data model, and that your migrations are doing the right thing.
 
 `VersionedCodable` provides the infrastructure to make these kinds of migrations easy, but you still need to think carefully about how you map fields between different versions of your types. Type safety isn't a substitute for testing.
 
