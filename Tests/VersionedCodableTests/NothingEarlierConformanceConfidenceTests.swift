@@ -9,7 +9,8 @@ import XCTest
 import Testing
 @testable import VersionedCodable
 
-let blankData = "{}".data(using: .utf8)!
+let emptyJSONObject = "{}".data(using: .utf8)!
+
 
 @Suite("NothingEarlier")
 struct NothingEarlierTests {
@@ -39,29 +40,25 @@ struct NothingEarlierTests {
             #expect {
                 try JSONDecoder().decode(
                     NothingEarlier.self,
-                    from: blankData
+                    from: emptyJSONObject
                 )
             } throws: { error in
                 return isTypeMismatchVsNothingEarlier(error: error)
             }
         }
     }
-    
-    @Suite("Behaviour", .tags(.behaviour))
-    struct BehaviourTests {
-        @Test(
-            "works properly as the 'stopper' type where there are no previous versions",
-            .tags(.behaviour)
-        ) func decodingFromSlightlyEarlierType() throws {
-            #expect(throws: VersionedDecodingError.unsupportedVersion(tried: VersionedCodableWithoutOlderVersion.self)) {
-                try JSONDecoder().decode(
-                    versioned: VersionedCodableWithoutOlderVersion.self,
-                    from: blankData
-                )
-            }
+
+    @Test(
+        "works properly as the 'stopper' type where there are no previous versions",
+        .tags(.behaviour)
+    ) func decodingFromSlightlyEarlierType() throws {
+        #expect(throws: VersionedDecodingError.unsupportedVersion(tried: VersionedCodableWithoutOlderVersion.self)) {
+            try JSONDecoder().decode(
+                versioned: VersionedCodableWithoutOlderVersion.self,
+                from: emptyJSONObject
+            )
         }
     }
-
 }
 
 
