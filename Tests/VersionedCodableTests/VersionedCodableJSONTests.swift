@@ -7,7 +7,8 @@ struct VersionedDocument: Codable {
 }
 
 
-@Suite("JSONDecoder encoding/decoding", .tags(.behaviour))
+@Suite("JSONDecoder encoding/decoding",
+       .tags(.behaviour))
 struct VersionedCodableJSONTests {
     @Test("decodes a grandfathered type with no version field")
     func decodingPoemPreV1ToPoemV1() throws {
