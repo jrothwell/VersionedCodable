@@ -214,5 +214,5 @@ As a full-time software engineer and architect for whom `VersionedCodable` is a 
 
 - [X] Allow different keypaths to the version field - **Implemented in version 1.1!**
 - [ ] Some kind of type solution to prevent clashes between the version field and a field in the `VersionedCodable` type at compile time. Needs more research, may not be possible with the current Swift compiler.
-- [ ] Swift 5.9 Macros support to significantly reduce boilerplate - *likely to be a separate package, probably not necessary for most adopters*
+- [ ] ~~Swift 5.9 Macros support to significantly reduce boilerplate~~ - *likely to be a separate package, probably not necessary for most adopters*
 - [ ] ~~(?) Potentially allow semantically versioned types. (This could be dangerous, though, as semantic versions have a very specific meaning—it's hard to see how you'd validate that v2.1 only adds to v2 and doesn't deprecate anything without some kind of static analysis, which is beyond the scope of `VersionedCodable`. It would also run the risk that backported releases to older versions would have no automatic migration path.)~~ Won't do because it increases the risk of diverging document versions with no guaranteed migration path when maintaining older versions of the system.
