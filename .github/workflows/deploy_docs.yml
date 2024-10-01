@@ -35,7 +35,6 @@ jobs:
             --target VersionedCodable \
             --disable-indexing \
             --transform-for-static-hosting \
-            --include-extended-types \
             --hosting-base-path VersionedCodable \
             --output-path _site \
             --source-service github \
