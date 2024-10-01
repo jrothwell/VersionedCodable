@@ -5,7 +5,7 @@
 //  Created by Jonathan Rothwell on 15/04/2023.
 //
 
-import XCTest
+import Foundation
 import Testing
 @testable import VersionedCodable
 
@@ -26,24 +26,13 @@ struct NothingEarlierTests {
         @Test(
             "throws if you try to decode anything into it"
         ) func decodingNothingEarlierThrowsAnError() throws {
-            
-            // TODO: 20/09/2024: The helper function is necessary due to some kind of issue with macro expansion. Remove this once the bug (in the compiler?) is resolved.
-            func isTypeMismatchVsNothingEarlier(error: Error) -> Bool {
-                switch error {
-                case DecodingError.typeMismatch(let type, _):
-                    return type == NothingEarlier.self
-                default:
-                    return false
-                }
-            }
-            
             #expect {
                 try JSONDecoder().decode(
                     NothingEarlier.self,
                     from: emptyJSONObject
                 )
             } throws: { error in
-                return isTypeMismatchVsNothingEarlier(error: error)
+                return isTypeMismatch(error, vs: NothingEarlier.self)
             }
         }
     }
