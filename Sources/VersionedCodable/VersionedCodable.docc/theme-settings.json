@@ -1,7 +1,14 @@
 {
   "theme": {
     "color": {
-      "documentation-intro-fill": "#40826d"
+        "hue-viridian": "161",
+        "documentation-intro-fill": {
+          "dark": "hsl(var(--color-hue-viridian), 100%, 10%)",
+          "light": "hsl(var(--color-hue-viridian), 100%, 90%)"
+        },
+    },
+    "typography": {
+      "html-font": "-apple-system-ui-serif, ui-serif, 'Georgia', serif"
     }
   },
   "meta": {
