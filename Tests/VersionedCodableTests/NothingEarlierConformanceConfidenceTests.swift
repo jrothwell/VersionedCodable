@@ -59,7 +59,7 @@ struct VersionedCodableWithoutOlderVersion: VersionedCodable {
     var text: String
 }
 
-extension VersionedDecodingError: @retroactive Equatable {
+extension VersionedDecodingError: Equatable {
     public static func == (lhs: VersionedDecodingError, rhs: VersionedDecodingError) -> Bool {
         switch (lhs, rhs) {
         case let (.unsupportedVersion(leftVersion), .unsupportedVersion(rightVersion)):
