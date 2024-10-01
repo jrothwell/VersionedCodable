@@ -24,8 +24,17 @@ public protocol VersionedCodable: Codable {
     /// The current version of this type. This is what is encoded into the `version` key on this type
     /// when it is encoded.
     ///
+    /// Generally you declare it as a `static let`, for instance:
+    ///
+    /// ```swift
+    /// static let version = 3
+    /// ```
+    ///
     /// - Note: It's possible for this to be `nil`, to account for versions of the type that were created and
     /// encoded/persisted to disk before you adopted ``VersionedCodable``.
+    /// - Important: It is your responsibility to make sure that `version` is immutable and does not
+    ///   change. The behaviour if it does change mid-execution is undefined. It's not a good idea to
+    ///   declare `version` as a computed property, or a `var` which the caller can then change.
     static var version: Int? { get }
     
     /// The next oldest version of this type, or ``NothingEarlier`` if this *is* the oldest version.
