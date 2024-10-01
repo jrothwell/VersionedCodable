@@ -30,12 +30,12 @@ public protocol VersionPathSpec: Codable {
 
 /// Describes how to encode and decode the version of a ``VersionedCodable`` type where the version is encoded at the root of the type in a field called `version`.
 public struct VersionKeyAtRootVersionPathSpec: Codable, VersionPathSpec {
-    public static let keyPathToVersion: KeyPath<VersionKeyAtRootVersionPathSpec, Int?> = \Self.version
+    public static let keyPathToVersion: KeyPath<Self, Int?> = \Self.version
     public init(withVersion version: Int? = nil) {
         self.version = version
     }
     
-    var version: Int?
+    let version: Int?
 }
 
 
