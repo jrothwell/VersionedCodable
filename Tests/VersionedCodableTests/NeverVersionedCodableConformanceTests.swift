@@ -10,7 +10,7 @@ import Testing
 @testable import VersionedCodable
 
 
-@available(macOS 14.0, iOS 17.0, *)
+@available(macOS 14.0, iOS 17.0, watchOS 10.0, tvOS 17.0, *)
 @Test("`Never` won't decode using the `VersionedCodable` decoding method", .tags(.configuration))
 func neverDoesntDecode() async throws {    
     let neverJSON = Data(#"{"no": "no"}"#.utf8)
