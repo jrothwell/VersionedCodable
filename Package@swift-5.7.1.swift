@@ -18,16 +18,6 @@ let package = Package(
             dependencies: [],
             resources: [
                 .copy("PrivacyInfo.xcprivacy")
-            ]),
-        .testTarget(
-            name: "VersionedCodableTests",
-            dependencies: ["VersionedCodable"],
-            resources: [
-                .copy("Support/expectedEncoded.plist"),
-                .copy("Support/expectedOlder.plist"),
-                .copy("Support/expectedUnsupported.plist"),
-                .copy("Support/UnusualKeyPaths/sonnet-v1.json"),
-                .copy("Support/UnusualKeyPaths/sonnet-v2.json")
-            ]),
+            ])
     ]
 )
