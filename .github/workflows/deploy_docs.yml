@@ -28,6 +28,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Setup Pages
         uses: actions/configure-pages@v3
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.app
       - name: Build with Swift-DocC
         run: |
             swift package --allow-writing-to-directory _site \
