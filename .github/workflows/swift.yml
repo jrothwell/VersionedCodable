@@ -16,7 +16,7 @@ jobs:
     strategy:
         matrix:
           os: [ubuntu-latest, macos-latest]
-          swift: ["6.0", "5.10", "5.9", "5.8", "5.7"]
+          swift: ["6.0", "5.10", "5.9", "5.8", "5.7.1"]
 
     steps:
     - uses: actions/checkout@v4
