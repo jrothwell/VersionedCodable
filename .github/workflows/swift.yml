@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: "Swift ${{ matrix.swift }} on ${{ matrix.os }}"
+    name: "Build with Swift ${{ matrix.swift }} on ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     strategy:
         fail-fast: false
@@ -28,10 +28,13 @@ jobs:
       run: swift build -v
       
   test:
+    name: "Run tests"
     runs-on: ubuntu-latest
     steps:
     - uses: NeedleInAJayStack/setup-swift@feat/swift-6 # TODO: Revert to swift-actions/setup-swift updates to support Swift 6.
       with:
       swift-version: "6.0"
+    - name: Build
+      run: swift build -v
     - name: Run tests
       run: swift test -v --enable-code-coverage
