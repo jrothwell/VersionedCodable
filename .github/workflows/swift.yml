@@ -20,7 +20,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: swift-actions/setup-swift@v2
+    - uses: NeedleInAJayStack/setup-swift@feat/swift-6 # TODO: Revert to swift-actions/setup-swift updates to support Swift 6.
       with:
         swift-version: ${{ matrix.swift }}
     - name: Build
