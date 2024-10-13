@@ -21,13 +21,16 @@ You can encode and decode using extensions for `Foundation`'s built-in JSON and 
 * A functioning computer.
 * Swift 5.7.1 or later.
 
+> [!NOTE]
+> **There is a problem with the current 1.2.x series and Swift 5.7-5.9.** This is tracked as [issue #24.](https://github.com/jrothwell/VersionedCodable/issues/24) please use the 1.1.x series if you are stuck on an older Swift version for now.
+
 ### What to do
 
 **In a Swift package:** Add this line to your `Package.swift` file's dependencies section...
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/jrothwell/VersionedCodable.git", .upToNextMajor(from: "1.1.0"))
+    .package(url: "https://github.com/jrothwell/VersionedCodable.git", .upToNextMinor(from: "1.1.0"))
 ],
 ```
 
